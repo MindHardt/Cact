@@ -1,0 +1,19 @@
+services:
+
+  pocketbase:
+    image: un1ver5e/cact-pocketbase:latest
+    build:
+      context: ./pocketbase
+    ports: [ "8080:8080" ]
+    volumes:
+      - "./pocketbase/pb_data:/pb/pb_data"
+      - "./pocketbase/pb_hooks:/pb/pb_hooks"
+      - "./pocketbase/pb_migrations:/pb/pb_migrations"
+    # admin
+    # nqC-mNR-6XC-H3e
+
+  web:
+    image: un1ver5e/cact-web:latest
+    build:
+      context: ./web
+    ports: [ "3000:80" ]

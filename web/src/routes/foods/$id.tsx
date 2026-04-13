@@ -1,0 +1,34 @@
+import {createFileRoute, useRouter} from '@tanstack/react-router'
+import {pb, uploadUrl} from "#/pb.ts";
+import {zFood} from "#/entities/food.ts";
+import {Button, Card, Surface} from "@heroui/react";
+
+export const Route = createFileRoute('/foods/$id')({
+  component: RouteComponent,
+  loader: async ({ params: { id }}) => ({
+    food: await pb.collection('foods').getOne(id).then(x => zFood.parse(x))
+  })
+})
+
+function RouteComponent() {
+
+  const { food } = Route.useLoaderData();
+  const router = useRouter();
+
+  return <Card className='text-center'>
+    <Button className='mx-auto' onClick={() => router.history.back()}>
+      Назад
+    </Button>
+    {food.image && <div className='rounded-lg overflow-hidden max-w-full flex justify-center items-center'>
+      <img src={uploadUrl(food.image, food)} alt='' loading='lazy' />
+    </div>}
+    <Card.Header>
+      <Card.Title className='text-2xl'>{food.name}</Card.Title>
+    </Card.Header>
+    {food.comment && (
+        <Surface variant='tertiary' className='rounded-2xl p-5'>
+          <p dangerouslySetInnerHTML={{ __html: food.comment }} />
+        </Surface>
+    )}
+  </Card>
+}
