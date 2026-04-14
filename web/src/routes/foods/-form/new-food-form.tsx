@@ -2,10 +2,11 @@ import {z} from "zod";
 import {useForm} from "@tanstack/react-form";
 import {pb} from "#/pb.ts";
 import {Button, Input, Modal, Spinner, Surface} from "@heroui/react";
-import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
+import {CakeSlice, Drumstick, Hamburger, Lock, Plus, Zap} from "lucide-react";
 import {useState} from "react";
 import InputNutritionalFact from "./input-nutritional-fact";
 import InputFoodImage from "#/routes/foods/-form/input-food-image.tsx";
+import {RootRoute} from "#/routes/__root.tsx";
 
 const zValidator = z.object({
     name: z.string().nonempty(),
@@ -30,6 +31,7 @@ export default function NewFoodForm({ onCreated } : {
     onCreated?: () => void | Promise<void>
 }) {
 
+    const { user } = RootRoute.useRouteContext();
     const [open, setOpen] = useState(false);
     const form = useForm({
         validators: {
@@ -40,7 +42,8 @@ export default function NewFoodForm({ onCreated } : {
         defaultValues,
         onSubmit: async ({ value }) => {
             await pb.collection('foods').create({
-                ...value
+                ...value,
+                author: user!.id
             });
             setOpen(false);
             form.reset();
@@ -49,8 +52,8 @@ export default function NewFoodForm({ onCreated } : {
     });
 
     return <Modal isOpen={open} onOpenChange={setOpen}>
-        <Button size='sm'>
-            <Plus />
+        <Button size='sm' isDisabled={!user}>
+            {user ? <Plus /> : <Lock />}
             <span className='hidden md:inline'>Добавить</span>
         </Button>
         <Modal.Backdrop>
