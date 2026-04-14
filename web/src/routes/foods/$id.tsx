@@ -19,9 +19,11 @@ function RouteComponent() {
     <Button className='mx-auto' onClick={() => router.history.back()}>
       Назад
     </Button>
-    {food.image && <div className='rounded-lg overflow-hidden max-w-full flex justify-center items-center'>
-      <img src={uploadUrl(food.image, food)} alt='' loading='lazy' />
-    </div>}
+    {food.image && (
+        <div className='rounded-2xl overflow-hidden max-w-full flex justify-center items-center mx-auto'>
+          <img className='max-w-full max-h-180' src={uploadUrl(food.image, food)} alt='' loading='lazy' />
+        </div>
+    )}
     <Card.Header>
       <Card.Title className='text-2xl'>{food.name}</Card.Title>
     </Card.Header>

@@ -5,11 +5,12 @@ import {zFood} from "#/entities/food.ts";
 import FoodCard from "#/components/food-card.tsx";
 import NothingFound from "#/components/nothing-found.tsx";
 import {useDebouncedCallback} from "@tanstack/react-pacer";
-import {Input, Spinner} from "@heroui/react";
+import {InputGroup, Spinner} from "@heroui/react";
+import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
 
 const zSearch = z.object({
     page: z.number().optional(),
-    q: z.string().optional()
+    q: z.string().optional().transform(x => x && x.length > 0 ? x : undefined)
 })
 
 export const Route = createFileRoute('/foods/')({
@@ -36,16 +37,21 @@ function RouteComponent() {
 
     const SearchResult = foods.length === 0
         ? <NothingFound />
-        : <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
+        : <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {foods.map(food => <FoodCard key={food.id} food={food} />)}
         </div>
 
     return <div className='flex flex-col gap-4'>
-        <Input
-            placeholder='Поиск...'
-            defaultValue={q}
-            onChange={e => setQ(e.target.value)}
-        />
+        <InputGroup>
+            <InputGroup.Input
+                placeholder='Поиск...'
+                defaultValue={q}
+                onChange={e => setQ(e.target.value)}
+            />
+            <InputGroup.Suffix>
+                <NewFoodForm onCreated={() => navigate({ to: '.' })} />
+            </InputGroup.Suffix>
+        </InputGroup>
         {routerState.isLoading && <Spinner />}
         {SearchResult}
     </div>

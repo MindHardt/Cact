@@ -19,6 +19,7 @@
     "@heroui/styles": "^3.0.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
+    "@tanstack/react-form": "^1.29.0",
     "@tanstack/react-pacer": "^0.21.1",
     "@tanstack/react-router": "latest",
     "@tanstack/react-router-devtools": "latest",
