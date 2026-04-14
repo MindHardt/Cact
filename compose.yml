@@ -16,4 +16,6 @@ services:
     image: un1ver5e/cact-web:latest
     build:
       context: ./web
+      args:
+        VITE_POCKETBASE_URL: http://localhost:8080
     ports: [ "3000:80" ]

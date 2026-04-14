@@ -11,6 +11,7 @@ export const zFood = zPbRecord.extend({
     unit: z.string().nullish(),
     comment: z.string().nullish(),
     image: z.string().nullish(),
+    author: z.string(),
     created: z.coerce.date(),
     updated: z.coerce.date()
 });

@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a07c895b-989f-480c-8267-9f0a48a91d34" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/web/src/food.drawio" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/routes/foods/-form/input-food-image.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/routes/foods/-form/input-nutritional-fact.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/routes/foods/-form/new-food-form.tsx" afterDir="false" />
+    <list default="true" id="a07c895b-989f-480c-8267-9f0a48a91d34" name="Changes" comment="Added new-food-form.tsx">
+      <change afterPath="$PROJECT_DIR$/web/.dockerignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/web/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/components/food-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/food-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/routes/foods/$id.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/routes/foods/$id.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/web/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/entities/food.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/entities/food.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/routes/__root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/routes/__root.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/routes/foods/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/routes/foods/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,18 +32,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "MindHardt"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MindHardt&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/MindHardt/Cact",
-    "accountId": "7236509c-bc27-4e4f-8958-92b1495d0ce2"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MindHardt/Cact&quot;,
+    &quot;accountId&quot;: &quot;7236509c-bc27-4e4f-8958-92b1495d0ce2&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -59,6 +57,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Docker.compose.yml.pocketbase: Compose Deployment.executor": "Run",
+    "Docker.compose.yml.web: Compose Deployment.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -73,7 +72,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
-    "npm.dev.executor": "Debug",
+    "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "editor.preferences.completion",
     "ts.external.directory.path": "C:\\Users\\igorb\\source\\repos\\cact\\web\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
@@ -104,6 +103,19 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="compose.yml.web: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="web" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/web/package.json" />
       <command value="run" />
@@ -117,6 +129,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="Docker.compose.yml.web: Compose Deployment" />
         <item itemvalue="Docker.compose.yml.pocketbase: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -137,11 +150,25 @@
       <updated>1776091289547</updated>
       <workItem from="1776091291607" duration="3323000" />
       <workItem from="1776100553452" duration="8269000" />
-      <workItem from="1776156534242" duration="12391000" />
+      <workItem from="1776156534242" duration="12749000" />
+      <workItem from="1776175535399" duration="5118000" />
     </task>
+    <task id="LOCAL-00001" summary="Added new-food-form.tsx">
+      <option name="closed" value="true" />
+      <created>1776169471495</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776169471495</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added new-food-form.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new-food-form.tsx" />
   </component>
 </project>

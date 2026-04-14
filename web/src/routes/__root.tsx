@@ -13,7 +13,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <Surface variant='secondary'>
-        <main className='h-dvh w-full p-5'>
+        <main className='h-dvh w-full p-5 '>
             <Outlet />
         </main>
         <TanStackDevtools

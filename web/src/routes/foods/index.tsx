@@ -5,8 +5,9 @@ import {zFood} from "#/entities/food.ts";
 import FoodCard from "#/components/food-card.tsx";
 import NothingFound from "#/components/nothing-found.tsx";
 import {useDebouncedCallback} from "@tanstack/react-pacer";
-import {InputGroup, Spinner} from "@heroui/react";
+import {Button, InputGroup, Spinner} from "@heroui/react";
 import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
+import {Search} from "lucide-react";
 
 const zSearch = z.object({
     page: z.number().optional(),
@@ -49,10 +50,12 @@ function RouteComponent() {
                 onChange={e => setQ(e.target.value)}
             />
             <InputGroup.Suffix>
+                <Button size='sm' variant='secondary'>
+                    {routerState.isLoading ? <Spinner className='size-4' /> : <Search />}
+                </Button>
                 <NewFoodForm onCreated={() => navigate({ to: '.' })} />
             </InputGroup.Suffix>
         </InputGroup>
-        {routerState.isLoading && <Spinner />}
         {SearchResult}
     </div>
 }
