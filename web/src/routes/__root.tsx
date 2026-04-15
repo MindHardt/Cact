@@ -11,6 +11,7 @@ import {zUser} from "#/entities/user.ts";
 import AuthHeader from "#/routes/-auth-header.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {useRef} from "react";
+import Footer from "#/routes/-footer.tsx";
 
 export const Route = createRootRoute({
     component: RootComponent,
@@ -30,11 +31,12 @@ function RootComponent() {
 
     return (
         <QueryClientProvider client={qc.current}>
-            <Surface variant='secondary'>
+            <Surface variant='secondary' className='h-dvh flex flex-col'>
                 <AuthHeader />
-                <main className='h-dvh w-full max-w-4xl mx-auto p-5'>
+                <main className='w-full max-w-4xl mx-auto p-5 grow'>
                     <Outlet />
                 </main>
+                <Footer />
                 <TanStackDevtools
                     config={{
                         position: 'bottom-right',
