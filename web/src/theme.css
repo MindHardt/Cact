@@ -38,10 +38,6 @@
     /* Border Radius */
     --radius: 0.75rem;
     --field-radius: 0.75rem;
-
-    /* Font Family */
-    /* Make sure to load Public Sans font in your app */
-    --font-sans: var(--font-public-sans);
 }
 
 .dark,

@@ -27,9 +27,9 @@ function RouteComponent() {
     <Card.Header>
       <Card.Title className='text-2xl'>{food.name}</Card.Title>
     </Card.Header>
-    {food.comment && (
+    {food.description && (
         <Surface variant='tertiary' className='rounded-2xl p-5'>
-          <p dangerouslySetInnerHTML={{ __html: food.comment }} />
+          <p>{food.description}</p>
         </Surface>
     )}
   </Card>

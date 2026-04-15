@@ -1,8 +1,8 @@
 import {RootRoute} from "#/routes/__root.tsx";
-import {Avatar, Button, Dropdown, Label, Spinner} from "@heroui/react";
-import type {User} from "#/entities/user.ts";
-import {pb, uploadUrl} from "#/pb.ts";
-import {useNavigate} from "@tanstack/react-router";
+import {Avatar, Button, Dropdown, Header, Label, Separator, Spinner} from "@heroui/react";
+import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
+import {pb} from "#/pb.ts";
+import {Link, useNavigate} from "@tanstack/react-router";
 import {useQuery} from "@tanstack/react-query";
 import {Lock} from "lucide-react";
 
@@ -15,7 +15,11 @@ export default function AuthHeader() {
         ? <UserControls user={user} />
         : <LoginControls />;
 
-    return <header className='bg-accent p-2 flex flex-row justify-center'>
+    return <header className='bg-accent p-2 flex flex-row gap-5 justify-center items-center'>
+        <Link to='/' className='size-10 transition-[scale] hover:scale-110'>
+            <img className='size-full' src='/logo64.png' alt='Logo' />
+        </Link>
+        <span className='text-background tracking-wide text-2xl font-bold'>Cact</span>
         {Controls}
     </header>
 
@@ -28,23 +32,30 @@ function UserControls({ user } : { user: User }) {
         pb.authStore.clear();
         await navigate({ to: '.' });
     }
-    const fallback = user.name
-        .split(' ', 2)
-        .map(x => x[0].toUpperCase())
-        .join('');
 
     return <Dropdown>
         <Dropdown.Trigger className='flex flex-row gap-1 items-center justify-center'>
             <Avatar>
-                {user.avatar && <Avatar.Image alt={user.name} src={uploadUrl(user.avatar, user)} />}
-                <Avatar.Fallback>{fallback}</Avatar.Fallback>
+                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
+                <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
         </Dropdown.Trigger>
         <Dropdown.Popover>
-            <Dropdown.Menu  onAction={() => logout()}>
-                <Dropdown.Item textValue="Выйти" variant="danger">
-                    <Label>Выйти</Label>
-                </Dropdown.Item>
+            <Dropdown.Menu className='p-4' onAction={(key) => key === 'logout' && logout()}>
+                <Dropdown.Section>
+                    <Header>{user.name}</Header>
+                </Dropdown.Section>
+                <Separator />
+                <Dropdown.Section>
+                    <Dropdown.Item>
+                        <Link to='/users/me'>
+                            <Label>Профиль</Label>
+                        </Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item id='logout' textValue="Выйти" variant="danger">
+                        <Label>Выйти</Label>
+                    </Dropdown.Item>
+                </Dropdown.Section>
             </Dropdown.Menu>
         </Dropdown.Popover>
     </Dropdown>

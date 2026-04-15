@@ -2,8 +2,9 @@ import { Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-import '../styles.css'
-import '../theme.css'
+import '../styles.css';
+import '../theme.css';
+import "@fontsource/open-sans/500.css";
 import {Surface} from "@heroui/react";
 import {pb} from "#/pb.ts";
 import {zUser} from "#/entities/user.ts";

@@ -5,7 +5,7 @@ import {Button, Input, Modal, Spinner, Surface} from "@heroui/react";
 import {CakeSlice, Drumstick, Hamburger, Lock, Plus, Zap} from "lucide-react";
 import {useState} from "react";
 import InputNutritionalFact from "./input-nutritional-fact";
-import InputFoodImage from "#/routes/foods/-form/input-food-image.tsx";
+import InputFoodImage from "./input-food-image.tsx";
 import {RootRoute} from "#/routes/__root.tsx";
 
 const zValidator = z.object({
