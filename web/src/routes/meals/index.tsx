@@ -6,6 +6,7 @@ import {Button, Card, CardContent, Chip, ProgressBar} from "@heroui/react";
 import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
 import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
+import {zTarget} from "#/entities/target.ts";
 
 const zSearch = z.object({
     day: z.coerce.date().optional()
@@ -24,13 +25,24 @@ export const Route = createFileRoute('/meals/')({
                     from, to
                 }),
                 sort: '+mealTime'
-            }).then(x => x.map(m => zMeal.parse(m)))
+            }).then(x => x.map(m => zMeal.parse(m))),
+            target: await pb.collection('targets').getFirstListItem(
+                pb.filter('activeFrom <= {:now}', { now: new Date() }),
+                {
+                    sort: '+activeFrom'
+                }
+            ).then(x => zTarget.parse(x)).catch(e => {
+                if ('status' in e && e.status === 404) {
+                    return null;
+                }
+                throw e;
+            })
         }
     }
 })
 
 function RouteComponent() {
-    const { meals } = Route.useLoaderData();
+    const { meals, target } = Route.useLoaderData();
     const facts = meals
         .map(({ calories, protein, fats, carbs }) => ({
             calories, protein, fats, carbs
@@ -41,15 +53,15 @@ function RouteComponent() {
             fats: a.fats + b.fats,
             carbs: a.carbs + b.carbs
         }));
-    const target = 1900;
 
     return <div className='flex flex-col gap-4 mx-auto'>
         <Card>
             <Card.Content className='grid grid-cols-2 lg:grid-cols-4 gap-2'>
                 <Chip className='items-center gap-1'>
                     <Zap />
-                    <span className='whitespace-nowrap'>{`${facts.calories} / ${target}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories' value={facts.calories / target * 100}>
+                    <span className='whitespace-nowrap'>{`${facts.calories} / ${target?.calories ?? 0}`}</span>
+                    <ProgressBar className='gap-0' aria-label='Calories'
+                                 value={target ? facts.calories / target.calories * 100 : 100}>
                         <ProgressBar.Track>
                             <ProgressBar.Fill />
                         </ProgressBar.Track>
@@ -57,8 +69,9 @@ function RouteComponent() {
                 </Chip>
                 <Chip className='items-center gap-1'>
                     <Drumstick />
-                    <span className='whitespace-nowrap'>{`${facts.protein} / ${target}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories' value={facts.protein / target * 100}>
+                    <span className='whitespace-nowrap'>{`${facts.protein} / ${target?.protein ?? 0}`}</span>
+                    <ProgressBar className='gap-0' aria-label='Calories'
+                                 value={target ? facts.protein / target.protein * 100 : 100}>
                         <ProgressBar.Track>
                             <ProgressBar.Fill />
                         </ProgressBar.Track>
@@ -66,8 +79,9 @@ function RouteComponent() {
                 </Chip>
                 <Chip className='items-center gap-1'>
                     <Hamburger />
-                    <span className='whitespace-nowrap'>{`${facts.fats} / ${target}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories' value={facts.fats / target * 100}>
+                    <span className='whitespace-nowrap'>{`${facts.fats} / ${target?.fats ?? 0}`}</span>
+                    <ProgressBar className='gap-0' aria-label='Calories'
+                                 value={target ? facts.fats / target.fats * 100 : 100}>
                         <ProgressBar.Track>
                             <ProgressBar.Fill />
                         </ProgressBar.Track>
@@ -75,8 +89,9 @@ function RouteComponent() {
                 </Chip>
                 <Chip className='items-center gap-1'>
                     <CakeSlice />
-                    <span className='whitespace-nowrap'>{`${facts.carbs} / ${target}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories' value={facts.carbs / target * 100}>
+                    <span className='whitespace-nowrap'>{`${facts.carbs} / ${target?.carbs ?? 0}`}</span>
+                    <ProgressBar className='gap-0' aria-label='Calories'
+                                 value={target ? facts.carbs / target.carbs * 100 : 100}>
                         <ProgressBar.Track>
                             <ProgressBar.Fill />
                         </ProgressBar.Track>
