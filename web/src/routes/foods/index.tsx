@@ -21,7 +21,8 @@ export const Route = createFileRoute('/foods/')({
     loader: async ({ deps: { page, q }}) => ({
         foods: await pb.collection('foods')
             .getList(page ?? 1, 12, {
-                filter: `name ~ "${q ?? ''}"`
+                filter: q ? `tags ~ "${q.toLocaleLowerCase()}"` : undefined,
+                sort: 'name'
             }).then(x => x.items.map(i => zFood.parse(i)))
     })
 })
