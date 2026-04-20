@@ -18,10 +18,12 @@ function App() {
                     Каталог продуктов
                 </Button>
             </Link>
-            <Button size='lg' className='w-full' isDisabled>
-                <NotebookPen />
-                Мой дневник
-            </Button>
+            <Link to='/meals'>
+                <Button size='lg' className='w-full'>
+                    <NotebookPen />
+                    Мой дневник
+                </Button>
+            </Link>
             <Button size='lg' className='w-full' isDisabled>
                 <Info />
                 О проекте

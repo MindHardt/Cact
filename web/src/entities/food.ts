@@ -1,16 +1,14 @@
 import {undefinedIfEmpty, zPbRecord} from "#/entities/pb-record.ts";
 import {z} from "zod";
+import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
 
 
 export const zFood = zPbRecord.extend({
     name: z.string(),
-    calories: z.number(),
-    protein: z.number(),
-    fats: z.number(),
-    carbs: z.number(),
+    ...zNutritionFacts.shape,
     unit: z.string().nonempty(),
-    description: z.string().nullish().transform(undefinedIfEmpty),
-    image: z.string().nullish().transform(undefinedIfEmpty),
+    description: z.string().optional().transform(undefinedIfEmpty),
+    image: z.string().optional().transform(undefinedIfEmpty),
     author: z.string(),
     created: z.coerce.date(),
     updated: z.coerce.date()
