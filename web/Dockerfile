@@ -1,4 +1,7 @@
 FROM node:22-alpine AS build
+
+ARG VITE_POCKETBASE_URL
+
 WORKDIR /app
 COPY package.json ./
 COPY pnpm-lock.yaml ./
