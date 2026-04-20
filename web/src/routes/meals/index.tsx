@@ -1,4 +1,4 @@
-import {createFileRoute, Link} from '@tanstack/react-router'
+import {createFileRoute, Link, redirect} from '@tanstack/react-router'
 import {pb} from "#/pb.ts";
 import {z} from "zod";
 import {addDays, addMilliseconds, formatRelative, set} from "date-fns";
@@ -13,6 +13,11 @@ const zSearch = z.object({
 })
 
 export const Route = createFileRoute('/meals/')({
+    beforeLoad: ({ context: { user }}) => {
+        if (!user) {
+            throw redirect({ to: '/' })
+        }
+    },
     component: RouteComponent,
     validateSearch: zSearch,
     loaderDeps: ({ search: { day }}) => ({ day }),
@@ -52,7 +57,7 @@ function RouteComponent() {
             protein: a.protein + b.protein,
             fats: a.fats + b.fats,
             carbs: a.carbs + b.carbs
-        }));
+        }), { calories: 0, protein: 0, fats: 0, carbs: 0 });
 
     return <div className='flex flex-col gap-4 mx-auto'>
         <Card>
