@@ -1,16 +1,16 @@
-import {createFileRoute, Link, redirect} from '@tanstack/react-router'
+import {createFileRoute, Link, redirect, useNavigate} from '@tanstack/react-router'
 import {pb} from "#/pb.ts";
 import {z} from "zod";
-import {addDays, addMilliseconds, formatRelative, set} from "date-fns";
-import {Button, Card, CardContent, Chip, ProgressBar} from "@heroui/react";
+import {addDays, addMilliseconds, format, formatRelative, set} from "date-fns";
+import {Button, Card, CardContent, Chip, InputGroup, ProgressBar, Separator} from "@heroui/react";
 import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
-import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
+import {CakeSlice, Calendar, Drumstick, Hamburger, Plus, RotateCcw, Zap} from "lucide-react";
 import {zTarget} from "#/entities/target.ts";
 import NothingFound from "#/components/nothing-found.tsx";
 
 const zSearch = z.object({
-    day: z.coerce.date().optional()
+    day: z.iso.date().optional().catch(undefined)
 })
 
 export const Route = createFileRoute('/meals/')({
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/meals/')({
     validateSearch: zSearch,
     loaderDeps: ({ search: { day }}) => ({ day }),
     loader: async ({ deps: { day }}) => {
-        const from = set(day ?? new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
+        const from = set(day ? new Date(day) : new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
         const to = addMilliseconds(addDays(from, 1), -1);
         return {
             meals: await pb.collection('meals').getFullList({
@@ -49,6 +49,11 @@ export const Route = createFileRoute('/meals/')({
 
 function RouteComponent() {
     const { meals, target } = Route.useLoaderData();
+    const { day } = Route.useSearch();
+    const navigate = useNavigate({ from: '/meals/' });
+    const setDay = async (day: string | undefined) => {
+        await navigate({ to: '/meals', search: { day }});
+    };
     const facts = meals
         .map(({ calories, protein, fats, carbs }) => ({
             calories, protein, fats, carbs
@@ -61,7 +66,26 @@ function RouteComponent() {
         }), { calories: 0, protein: 0, fats: 0, carbs: 0 });
 
     return <div className='flex flex-col gap-4 mx-auto'>
+        <InputGroup>
+            <InputGroup.Prefix className='gap-1'>
+                <Calendar />
+                <span className='hidden sm:inline'>День</span>
+            </InputGroup.Prefix>
+            <InputGroup.Input
+                type='date'
+                value={format(day ?? new Date(), 'yyyy-MM-dd')}
+                onChange={e => setDay(e.target.value)}
+            />
+            <InputGroup.Suffix>
+                <Button size='sm' onClick={() => setDay(undefined)}>
+                    <RotateCcw />
+                </Button>
+            </InputGroup.Suffix>
+        </InputGroup>
         <Card>
+            <Card.Header>
+                <Card.Title className='font-semibold text-lg text-center'>Статистика за день</Card.Title>
+            </Card.Header>
             <Card.Content className='grid grid-cols-2 lg:grid-cols-4 gap-2'>
                 <Chip className='items-center gap-1'>
                     <Zap />
@@ -105,6 +129,8 @@ function RouteComponent() {
                 </Chip>
             </Card.Content>
         </Card>
+        <h2 className='text-center font-semibold text-lg'>Приёмы пищи</h2>
+        <Separator />
         <div className='flex flex-col gap-4 px-2'>
             {meals.length > 0 ? meals.map(meal => (
                 <Link key={meal.id} to='/meals/$id' params={{ id: meal.id }}>
