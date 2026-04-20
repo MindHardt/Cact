@@ -1,9 +1,8 @@
 import {RootRoute} from "#/routes/__root.tsx";
-import {Avatar, Button, Dropdown, Header, Label, Separator, Spinner} from "@heroui/react";
+import {Avatar, Button, Dropdown, Header, Label, Separator} from "@heroui/react";
 import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
 import {pb} from "#/pb.ts";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useQuery} from "@tanstack/react-query";
 import {Lock} from "lucide-react";
 
 
@@ -64,21 +63,7 @@ function UserControls({ user } : { user: User }) {
 function LoginControls() {
 
     const navigate = useNavigate();
-    const { data: providers } = useQuery({
-        queryKey: ['auth-methods'],
-        queryFn: async () => pb
-            .collection('users')
-            .listAuthMethods()
-            .then(x => x.oauth2.providers),
-        staleTime: Infinity
-    });
-    if (!providers) {
-        return <Button isDisabled>
-            <Spinner />
-            Войти
-        </Button>
-    }
-
+    const { providers } = RootRoute.useRouteContext();
     const login = async (key: number | string) => pb
         .collection('users')
         .authWithOAuth2({ provider: typeof key === 'number' ? providers[key].name : key })

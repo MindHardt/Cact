@@ -7,6 +7,7 @@ import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
 import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
 import {zTarget} from "#/entities/target.ts";
+import NothingFound from "#/components/nothing-found.tsx";
 
 const zSearch = z.object({
     day: z.coerce.date().optional()
@@ -105,7 +106,7 @@ function RouteComponent() {
             </Card.Content>
         </Card>
         <div className='flex flex-col gap-4 px-2'>
-            {meals.map(meal => (
+            {meals.length > 0 ? meals.map(meal => (
                 <Link key={meal.id} to='/meals/$id' params={{ id: meal.id }}>
                     <Card>
                         <CardContent className='flex flex-row flex-wrap gap-2 items-center'>
@@ -120,7 +121,7 @@ function RouteComponent() {
                         </CardContent>
                     </Card>
                 </Link>
-            ))}
+            )) : <NothingFound />}
             <Link to='/meals/add' className='px-5'>
                 <Button className='w-full' variant='primary' size='lg'>
                     <Plus />

@@ -19,7 +19,13 @@ export const Route = createRootRoute({
         if (pb.authStore.token && !pb.authStore.isValid) {
             await pb.collection('users').authRefresh();
         }
-        return { user: zUser.nullish().parse(pb.authStore.record) }
+        return {
+            user: zUser.nullish().parse(pb.authStore.record),
+            providers: await pb
+                .collection('users')
+                .listAuthMethods()
+                .then(x => x.oauth2.providers)
+        }
     }
 });
 
