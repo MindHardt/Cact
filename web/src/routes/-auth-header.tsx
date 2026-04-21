@@ -63,7 +63,7 @@ function UserControls({ user } : { user: User }) {
 function LoginControls() {
 
     const navigate = useNavigate();
-    const { providers } = RootRoute.useRouteContext();
+    const { providers } = RootRoute.useLoaderData();
     const login = async (key: number | string) => pb
         .collection('users')
         .authWithOAuth2({ provider: typeof key === 'number' ? providers[key].name : key })

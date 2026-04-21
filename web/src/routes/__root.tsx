@@ -21,12 +21,11 @@ export const Route = createRootRoute({
         }
         return {
             user: zUser.nullish().parse(pb.authStore.record),
-            providers: await pb
-                .collection('users')
-                .listAuthMethods()
-                .then(x => x.oauth2.providers)
         }
-    }
+    },
+    loader: async () => ({
+        providers: await pb.collection('users').listAuthMethods().then(x => x.oauth2.providers)
+    })
 });
 
 export const RootRoute = Route;
