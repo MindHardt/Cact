@@ -41,7 +41,7 @@ function RouteComponent() {
     const SearchResult = foods.length === 0
         ? <NothingFound />
         : <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {foods.map(food => <FoodCard key={food.id} food={food} />)}
+            {foods.map(food => <FoodCard withLink key={food.id} food={food} />)}
         </div>
 
     return <div className='flex flex-col gap-4'>

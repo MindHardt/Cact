@@ -1,16 +1,28 @@
-import {type Meal} from "#/entities/meal.ts";
+import {calculateNutrition, type Meal} from "#/entities/meal.ts";
 import {useForm} from "@tanstack/react-form";
 import {z} from "zod";
 import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
 import {undefinedIfEmpty} from "#/entities/pb-record.ts";
 import {zFood} from "#/entities/food.ts";
-import {Button, ButtonGroup, Card, CardContent, CardHeader, InputGroup, Modal, Spinner, TextArea} from "@heroui/react";
-import {CaseSensitive, Clock, Trash, TriangleAlert} from "lucide-react";
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    CardContent,
+    CardHeader,
+    InputGroup,
+    Modal,
+    Spinner,
+    Surface,
+    TextArea
+} from "@heroui/react";
+import {Calculator, CaseSensitive, Clock, Trash, TriangleAlert} from "lucide-react";
 import {pb} from "#/pb.ts";
 import {RootRoute} from "#/routes/__root.tsx";
 import {useRouter} from "@tanstack/react-router";
 import {addMinutes} from "date-fns";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
+import FoodSelector from "#/routes/meals/-components/food-selector.tsx";
 
 const zValidator = z.object({
     id: z.string().optional(),
@@ -42,6 +54,13 @@ export default function MealForm({ meal } : {
     const router = useRouter();
     const form = useForm({
         defaultValues: meal ? zValidator.parse(meal) : emptyForm(),
+        validators: {
+            // tanstack form errors bc zod
+            // @ts-expect-error
+            onMount: zValidator,
+            // @ts-expect-error
+            onChange: zValidator
+        },
         onSubmit: async ({ value }) => {
             const body = {
                 ...value,
@@ -88,6 +107,58 @@ export default function MealForm({ meal } : {
                         />
                     )}
                 </form.Field>
+            </CardContent>
+            <CardContent>
+                <Surface>
+                    <form.Field name='foods'>
+                        {field => <div className='flex flex-col gap-2'>
+                            {field.state.value.map(({ food, count }, i) => (
+                                <InputGroup className='justify-start'>
+                                    <InputGroup.Prefix>
+                                        {food.name}
+                                    </InputGroup.Prefix>
+                                    <div className='grow'></div>
+                                    <InputGroup.Input
+                                        type='number'
+                                        step='0.1'
+                                        className='grow-0 shrink'
+                                        value={count}
+                                        onChange={e => {
+                                            const copy = [...field.state.value];
+                                            copy[i] = { ...copy[i], count: parseFloat(e.target.value) };
+                                            field.handleChange(copy);
+                                        }}
+                                    />
+                                    <InputGroup.Suffix>
+                                        <Button
+                                            size='sm'
+                                            variant='danger-soft'
+                                            onClick={() => field.handleChange([
+                                                ...field.state.value.slice(0, i - 1),
+                                                ...field.state.value.slice(i, 0)
+                                            ])}>
+                                            <Trash />
+                                        </Button>
+                                    </InputGroup.Suffix>
+                                </InputGroup>
+                            ))}
+                            <ButtonGroup className='w-full'>
+                                <FoodSelector onSelected={(food) =>
+                                    field.handleChange([...field.state.value, { food, count: 1 }])}
+                                />
+                                <Button variant='secondary' onClick={() => {
+                                    const calculated = calculateNutrition(form.state.values.foods);
+                                    form.setFieldValue('calories', calculated.calories);
+                                    form.setFieldValue('protein', calculated.protein);
+                                    form.setFieldValue('fats', calculated.fats);
+                                    form.setFieldValue('carbs', calculated.carbs);
+                                }}>
+                                    <Calculator />
+                                </Button>
+                            </ButtonGroup>
+                        </div>}
+                    </form.Field>
+                </Surface>
             </CardContent>
             <CardContent>
                 <div className='grid grid-cols-2 gap-2'>
