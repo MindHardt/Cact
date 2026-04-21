@@ -1,6 +1,6 @@
 import {undefinedIfEmpty, zPbRecord} from "#/entities/pb-record.ts";
 import {z} from "zod";
-import {uploadUrl} from "#/pb.ts";
+import {pb} from "#/pb.ts";
 
 
 export const zUser = zPbRecord.extend({
@@ -20,5 +20,5 @@ export function avatarFallback(user: User) {
 }
 export function avatarSrc(user: User) : string {
     // @ts-expect-error to fix avatar changing dynamically
-    return user.avatar ? uploadUrl(user.avatar, user) : null;
+    return user.avatar ? pb.files.getURL(user, user.avatar) : null;
 }

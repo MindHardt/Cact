@@ -1,5 +1,5 @@
 import {createFileRoute, useRouter} from '@tanstack/react-router'
-import {pb, uploadUrl} from "#/pb.ts";
+import {pb} from "#/pb.ts";
 import {zFood} from "#/entities/food.ts";
 import {Button, Card, Surface} from "@heroui/react";
 
@@ -21,7 +21,7 @@ function RouteComponent() {
     </Button>
     {food.image && (
         <div className='rounded-2xl overflow-hidden max-w-full flex justify-center items-center mx-auto'>
-          <img className='max-w-full max-h-180' src={uploadUrl(food.image, food)} alt='' loading='lazy' />
+          <img className='max-w-full max-h-180' src={pb.files.getURL(food, food.image)} alt='' loading='lazy' />
         </div>
     )}
     <Card.Header>
