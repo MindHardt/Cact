@@ -3,7 +3,8 @@ services:
   pocketbase:
     image: un1ver5e/cact-pocketbase:latest
     build:
-      context: ./pocketbase
+      context: .
+      dockerfile: ./pocketbase/Dockerfile
     ports: [ "8080:8080" ]
     volumes:
       - "./pocketbase/pb_data:/pb/pb_data"
@@ -15,7 +16,8 @@ services:
   web:
     image: un1ver5e/cact-web:latest
     build:
-      context: ./web
+      context: .
+      dockerfile: ./web/Dockerfile
       args:
         VITE_POCKETBASE_URL: http://localhost:8080
     ports: [ "3000:80" ]

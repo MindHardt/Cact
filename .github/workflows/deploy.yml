@@ -29,14 +29,16 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ./pocketbase
+          context: .
+          file: ./pocketbase/Dockerfile
           tags: ${{ secrets.REGISTRY }}/cact/pocketbase:latest
 
       - name: Build and push web
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ./web
+          context: .
+          file: ./web/Dockerfile
           build-args: |
             NODE_ENV=production
             VITE_POCKETBASE_URL=https://cactpb.un1ver5e.ru
