@@ -4,10 +4,10 @@ import {pb} from "#/pb.ts";
 import {zFood} from "#/entities/food.ts";
 import FoodCard from "#/components/food-card.tsx";
 import NothingFound from "#/components/nothing-found.tsx";
-import {useDebouncedCallback} from "@tanstack/react-pacer";
-import {Button, InputGroup, Spinner} from "@heroui/react";
+import {useDebouncer} from "@tanstack/react-pacer";
+import {Button, InputGroup} from "@heroui/react";
 import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
-import {Search} from "lucide-react";
+import {LoaderCircle, Search} from "lucide-react";
 
 const zSearch = z.object({
     page: z.number().optional(),
@@ -33,9 +33,10 @@ function RouteComponent() {
     const { foods } = Route.useLoaderData();
     const { q } = Route.useSearch();
     const routerState = useRouterState();
-    const setQ = useDebouncedCallback(async (q: string) => {
-        await navigate({ to: '/foods', search: { q }})
-    }, { wait: 250 });
+    const setQ = useDebouncer(
+        async (q: string) => await navigate({ to: '/foods', search: { q }}),
+        { wait: 250 },
+    )
 
     const SearchResult = foods.length === 0
         ? <NothingFound />
@@ -48,11 +49,11 @@ function RouteComponent() {
             <InputGroup.Input
                 placeholder='Поиск...'
                 defaultValue={q}
-                onChange={e => setQ(e.target.value)}
+                onChange={e => setQ.maybeExecute(e.target.value)}
             />
-            <InputGroup.Suffix>
-                <Button size='sm' variant='secondary'>
-                    {routerState.isLoading ? <Spinner className='size-4' /> : <Search />}
+            <InputGroup.Suffix className='gap-1'>
+                <Button size='sm' variant='secondary' onClick={() => setQ.flush()}>
+                    {routerState.isLoading ? <LoaderCircle className='size-4 animate-spin' /> : <Search className='size-4' />}
                 </Button>
                 <NewFoodForm onCreated={() => navigate({ to: '.' })} />
             </InputGroup.Suffix>

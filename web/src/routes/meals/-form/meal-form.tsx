@@ -5,11 +5,12 @@ import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
 import {undefinedIfEmpty} from "#/entities/pb-record.ts";
 import {zFood} from "#/entities/food.ts";
 import {Button, ButtonGroup, Card, CardContent, CardHeader, InputGroup, Modal, Spinner, TextArea} from "@heroui/react";
-import {CakeSlice, CaseSensitive, Clock, Drumstick, Hamburger, Trash, TriangleAlert, Zap} from "lucide-react";
+import {CaseSensitive, Clock, Trash, TriangleAlert} from "lucide-react";
 import {pb} from "#/pb.ts";
 import {RootRoute} from "#/routes/__root.tsx";
 import {useRouter} from "@tanstack/react-router";
 import {addMinutes} from "date-fns";
+import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
 
 const zValidator = z.object({
     id: z.string().optional(),
@@ -89,58 +90,18 @@ export default function MealForm({ meal } : {
                 </form.Field>
             </CardContent>
             <CardContent>
-                <div className='grid grid-cols-2 lg:grid-cols-4 gap-2'>
+                <div className='grid grid-cols-2 gap-2'>
                     <form.Field name='calories'>
-                        {field => (
-                            <InputGroup>
-                                <InputGroup.Prefix><Zap /></InputGroup.Prefix>
-                                <InputGroup.Input
-                                    min={0}
-                                    step={1}
-                                    value={field.state.value}
-                                    onChange={e => field.handleChange(parseInt(e.target.value) || 0)}
-                                />
-                            </InputGroup>
-                        )}
+                        {field => <InputNutritionalFact withLetter field={field} />}
                     </form.Field>
                     <form.Field name='protein'>
-                        {field => (
-                            <InputGroup>
-                                <InputGroup.Prefix><Drumstick /></InputGroup.Prefix>
-                                <InputGroup.Input
-                                    min={0}
-                                    step={1}
-                                    value={field.state.value}
-                                    onChange={e => field.handleChange(parseInt(e.target.value) || 0)}
-                                />
-                            </InputGroup>
-                        )}
+                        {field => <InputNutritionalFact withLetter field={field} />}
                     </form.Field>
                     <form.Field name='fats'>
-                        {field => (
-                            <InputGroup>
-                                <InputGroup.Prefix><Hamburger /></InputGroup.Prefix>
-                                <InputGroup.Input
-                                    min={0}
-                                    step={1}
-                                    value={field.state.value}
-                                    onChange={e => field.handleChange(parseInt(e.target.value) || 0)}
-                                />
-                            </InputGroup>
-                        )}
+                        {field => <InputNutritionalFact withLetter field={field} />}
                     </form.Field>
                     <form.Field name='carbs'>
-                        {field => (
-                            <InputGroup>
-                                <InputGroup.Prefix><CakeSlice /></InputGroup.Prefix>
-                                <InputGroup.Input
-                                    min={0}
-                                    step={1}
-                                    value={field.state.value}
-                                    onChange={e => field.handleChange(parseInt(e.target.value) || 0)}
-                                />
-                            </InputGroup>
-                        )}
+                        {field => <InputNutritionalFact withLetter field={field} />}
                     </form.Field>
                 </div>
             </CardContent>

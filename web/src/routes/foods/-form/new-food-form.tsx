@@ -1,12 +1,12 @@
 import {z} from "zod";
 import {useForm} from "@tanstack/react-form";
 import {pb} from "#/pb.ts";
-import {Button, Input, Modal, Spinner, Surface} from "@heroui/react";
-import {CakeSlice, Drumstick, Hamburger, Lock, Plus, Zap} from "lucide-react";
+import {Button, Input, InputGroup, Modal, Spinner, Surface} from "@heroui/react";
+import {Copy, Lock, Plus} from "lucide-react";
 import {useState} from "react";
-import InputNutritionalFact from "./input-nutritional-fact";
 import InputFoodImage from "./input-food-image.tsx";
 import {RootRoute} from "#/routes/__root.tsx";
+import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
 
 const zValidator = z.object({
     name: z.string().nonempty(),
@@ -84,32 +84,45 @@ export default function NewFoodForm({ onCreated } : {
                             <Surface className='flex flex-col gap-1'>
                                 <form.Field name='calories'>
                                     {field => (
-                                        <InputNutritionalFact icon={<Zap />} letter='К' field={field} />
+                                        <InputNutritionalFact withLetter field={field} />
                                     )}
                                 </form.Field>
                                 <form.Field name='protein'>
                                     {field => (
-                                        <InputNutritionalFact icon={<Drumstick />} letter='Б' field={field} />
+                                        <InputNutritionalFact withLetter field={field} />
                                     )}
                                 </form.Field>
                                 <form.Field name='fats'>
                                     {field => (
-                                        <InputNutritionalFact icon={<Hamburger />} letter='Ж' field={field} />
+                                        <InputNutritionalFact withLetter field={field} />
                                     )}
                                 </form.Field>
                                 <form.Field name='carbs'>
                                     {field => (
-                                        <InputNutritionalFact icon={<CakeSlice />} letter='У' field={field} />
+                                        <InputNutritionalFact withLetter field={field} />
                                     )}
                                 </form.Field>
                             </Surface>
                             <form.Field name='unit'>
                                 {field => (
-                                    <Input
-                                        placeholder='Единица измерения'
-                                        value={field.state.value}
-                                        onChange={e => field.handleChange(e.target.value)}
-                                    />
+                                    <InputGroup>
+                                        <InputGroup.Input
+                                            placeholder='Единица измерения'
+                                            value={field.state.value}
+                                            onChange={e => field.handleChange(e.target.value)}
+                                        />
+                                        {field.state.value.length == 0 && (
+                                            <InputGroup.Suffix>
+                                                <Button
+                                                    size='sm'
+                                                    variant='secondary'
+                                                    onClick={() => field.handleChange('100 г')}>
+                                                    <Copy />
+                                                    100 г
+                                                </Button>
+                                            </InputGroup.Suffix>
+                                        )}
+                                    </InputGroup>
                                 )}
                             </form.Field>
                             <form.Field name='image'>
