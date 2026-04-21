@@ -1,13 +1,21 @@
 import {createFileRoute, Link, redirect, useNavigate} from '@tanstack/react-router'
 import {pb} from "#/pb.ts";
 import {z} from "zod";
-import {addDays, addMilliseconds, format, formatRelative, set} from "date-fns";
-import {Button, Card, CardContent, Chip, InputGroup, ProgressBar, Separator} from "@heroui/react";
+import {addDays, addMilliseconds, formatRelative, set} from "date-fns";
+import {
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    ProgressBar,
+    Separator
+} from "@heroui/react";
 import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
-import {CakeSlice, Calendar, Drumstick, Hamburger, Plus, RotateCcw, Zap} from "lucide-react";
+import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
 import {zTarget} from "#/entities/target.ts";
 import NothingFound from "#/components/nothing-found.tsx";
+import DaySelector from "#/routes/meals/-components/day-selector.tsx";
 
 const zSearch = z.object({
     day: z.iso.date().optional().catch(undefined)
@@ -66,22 +74,7 @@ function RouteComponent() {
         }), { calories: 0, protein: 0, fats: 0, carbs: 0 });
 
     return <div className='flex flex-col gap-4 mx-auto'>
-        <InputGroup>
-            <InputGroup.Prefix className='gap-1'>
-                <Calendar />
-                <span className='hidden sm:inline'>День</span>
-            </InputGroup.Prefix>
-            <InputGroup.Input
-                type='date'
-                value={format(day ?? new Date(), 'yyyy-MM-dd')}
-                onChange={e => setDay(e.target.value)}
-            />
-            <InputGroup.Suffix>
-                <Button size='sm' onClick={() => setDay(undefined)}>
-                    <RotateCcw />
-                </Button>
-            </InputGroup.Suffix>
-        </InputGroup>
+        <DaySelector day={day} setDay={setDay} />
         <Card>
             <Card.Header>
                 <Card.Title className='font-semibold text-lg text-center'>Статистика за день</Card.Title>
