@@ -4,6 +4,7 @@ import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
 import {pb} from "#/pb.ts";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {Lock} from "lucide-react";
+import Logo from "#/components/logo.tsx";
 
 
 export default function AuthHeader() {
@@ -14,11 +15,9 @@ export default function AuthHeader() {
         ? <UserControls user={user} />
         : <LoginControls />;
 
-    return <header className='bg-accent p-2 flex flex-row gap-5 justify-center items-center'>
-        <Link to='/' className='size-10 transition-[scale] hover:scale-110'>
-            <img className='size-full' src='/logo64.png' alt='Logo' />
-        </Link>
-        <span className='text-background tracking-wide text-2xl font-bold'>Cact</span>
+    return <header className='bg-accent text-background p-2 flex flex-row gap-5 justify-center items-center'>
+        <Logo />
+        <span className='tracking-wide text-2xl font-bold'>Cact</span>
         {Controls}
     </header>
 

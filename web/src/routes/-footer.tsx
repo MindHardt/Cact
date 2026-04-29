@@ -1,4 +1,4 @@
-import {Button, Surface} from "@heroui/react";
+import {Button, Popover, Surface} from "@heroui/react";
 import {Bug, ExternalLink} from "lucide-react";
 
 
@@ -17,12 +17,27 @@ export default function Footer() {
                     </Button>
                 </a>
             </div>
-            <a href='https://un1ver5e.tech/' target='_blank'>
-                <Button variant='secondary'>
-                    Разработчик
-                    <ExternalLink />
-                </Button>
-            </a>
+            <div>
+                <Popover>
+                    <Button variant="tertiary">
+                        <span className='text-sm text-accent animate-pulse'>αlpha</span>
+                    </Button>
+                    <Popover.Content placement="top">
+                        <Popover.Dialog>
+                            <Popover.Arrow />
+                            <p className="text-sm">
+                                Это альфа-версия приложения, обо всех багах и пожеланиях пишите разработчику
+                            </p>
+                        </Popover.Dialog>
+                    </Popover.Content>
+                </Popover>
+                <a href='https://un1ver5e.tech/' target='_blank'>
+                    <Button variant='secondary'>
+                        Разработчик
+                        <ExternalLink />
+                    </Button>
+                </a>
+            </div>
         </Surface>
     </footer>
 }
