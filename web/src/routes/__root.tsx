@@ -17,7 +17,13 @@ export const Route = createRootRoute({
     component: RootComponent,
     beforeLoad: async () => {
         if (pb.authStore.token && !pb.authStore.isValid) {
-            await pb.collection('users').authRefresh();
+            await pb.collection('users').authRefresh().catch(e => {
+                if ('status' in e || e.status === 401) {
+                    pb.authStore.clear();
+                } else {
+                    throw e;
+                }
+            });
         }
         return {
             user: zUser.nullish().parse(pb.authStore.record),

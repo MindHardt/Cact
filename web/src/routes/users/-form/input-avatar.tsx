@@ -28,7 +28,7 @@ export default function InputAvatar({ user }: {
                 onChange={e => setAvatar(e.target.files![0])}
             />
             <Avatar>
-                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
+                <Avatar.Image alt={user.name} src={avatarSrc(user, { thumb: '40x40f' })} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
             <ButtonGroup className='w-full'>

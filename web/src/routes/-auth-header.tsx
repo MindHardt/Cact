@@ -35,7 +35,7 @@ function UserControls({ user } : { user: User }) {
     return <Dropdown>
         <Dropdown.Trigger className='flex flex-row gap-1 items-center justify-center'>
             <Avatar>
-                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
+                <Avatar.Image alt={user.name} src={avatarSrc(user, { thumb: '40x40f' })} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
         </Dropdown.Trigger>

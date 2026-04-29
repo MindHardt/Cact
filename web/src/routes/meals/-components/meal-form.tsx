@@ -23,6 +23,7 @@ import {useRouter} from "@tanstack/react-router";
 import {addMinutes} from "date-fns";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
 import FoodSelector from "#/routes/meals/-components/food-selector.tsx";
+import AskAiModal from "#/routes/meals/-components/ask-ai-modal.tsx";
 
 const zValidator = z.object({
     id: z.string().optional(),
@@ -101,6 +102,7 @@ export default function MealForm({ meal } : {
                 <form.Field name='comment'>
                     {field => (
                         <TextArea
+                            className='min-h-36'
                             placeholder='Комментарий'
                             value={field.state.value}
                             onChange={e => field.handleChange(e.target.value)}
@@ -146,6 +148,13 @@ export default function MealForm({ meal } : {
                                 <FoodSelector onSelected={(food) =>
                                     field.handleChange([...field.state.value, { food, count: 1 }])}
                                 />
+                                <AskAiModal onResponseReceived={e => {
+                                    form.setFieldValue('calories', x => x + (e.calories ?? 0));
+                                    form.setFieldValue('protein', x => x + (e.protein ?? 0));
+                                    form.setFieldValue('fats', x => x + (e.fats ?? 0));
+                                    form.setFieldValue('carbs', x => x + (e.carbs ?? 0));
+                                    form.setFieldValue('comment', x => x + '\nРасчёт ИИ:\n' + e.comment);
+                                }} />
                                 <Button variant='secondary' onClick={() => {
                                     const calculated = calculateNutrition(form.state.values.foods);
                                     form.setFieldValue('calories', calculated.calories);

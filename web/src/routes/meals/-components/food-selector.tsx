@@ -34,6 +34,7 @@ export default function FoodSelector({ onSelected } : {
         <Modal isOpen={open} onOpenChange={setOpen}>
             <Button className='grow'>
                 <Utensils />
+                Добавить блюдо
             </Button>
             <Modal.Backdrop>
                 <Modal.Container>

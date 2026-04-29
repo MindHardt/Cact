@@ -1,12 +1,12 @@
 FROM node:22-alpine AS build
 
-ARG VITE_POCKETBASE_URL
 RUN corepack enable
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run -r build
+ARG VITE_POCKETBASE_URL
+RUN pnpm run --filter cact-web --fail-if-no-match build
 
 FROM nginx:alpine
 COPY --from=build /usr/src/app/web/dist /usr/share/nginx/html

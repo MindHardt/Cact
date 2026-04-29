@@ -1,6 +1,7 @@
 import {undefinedIfEmpty, zPbRecord} from "#/entities/pb-record.ts";
 import {z} from "zod";
 import {pb} from "#/pb.ts";
+import type {FileOptions} from "pocketbase";
 
 
 export const zUser = zPbRecord.extend({
@@ -18,7 +19,7 @@ export function avatarFallback(user: User) {
         .map(x => x[0]?.toUpperCase() ?? '')
         .join('');
 }
-export function avatarSrc(user: User) : string {
+export function avatarSrc(user: User, opts?: FileOptions) : string {
     // @ts-expect-error to fix avatar changing dynamically
-    return user.avatar ? pb.files.getURL(user, user.avatar) : null;
+    return user.avatar ? pb.files.getURL(user, user.avatar, opts) : null;
 }

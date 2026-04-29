@@ -1,20 +1,20 @@
 services:
 
   pocketbase:
-    image: un1ver5e/cact-pocketbase:latest
     build:
       context: .
       dockerfile: ./pocketbase/Dockerfile
     ports: [ "8080:8080" ]
+    env_file: [ "./pocketbase/.env.local" ]
     volumes:
       - "./pocketbase/pb_data:/pb/pb_data"
       - "./pocketbase/pb_hooks:/pb/pb_hooks"
       - "./pocketbase/pb_migrations:/pb/pb_migrations"
+      - "./pocketbase/instructions.md:/pb/instuctions.md"
     # admin@example.com
     # nqC-mNR-6XC-H3e
 
   web:
-    image: un1ver5e/cact-web:latest
     build:
       context: .
       dockerfile: ./web/Dockerfile
