@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
-import {CakeSlice, Check, Cog, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
+import {Check, Cog, Plus} from "lucide-react";
 import {type Target, zTarget} from "#/entities/target.ts";
 import NothingFound from "#/components/nothing-found.tsx";
 import DaySelector from "#/components/day-selector.tsx";
@@ -97,10 +97,10 @@ function RouteComponent() {
                     <Card>
                         <Card.Content className='flex flex-row flex-wrap gap-2 items-center'>
                             <h2 className='text-lg font-semibold'>{meal.name}</h2>
-                            <Chip><Zap /> {meal.calories}</Chip>
-                            <Chip><Drumstick /> {meal.protein}</Chip>
-                            <Chip><Hamburger /> {meal.fats}</Chip>
-                            <Chip><CakeSlice /> {meal.carbs}</Chip>
+                            {meal.calories !== 0 && <Chip><NutritionalFactIcon fact='calories' /> {meal.calories}</Chip>}
+                            {meal.protein !== 0 && <Chip><NutritionalFactIcon fact='protein' /> {meal.protein}</Chip>}
+                            {meal.fats !== 0 && <Chip><NutritionalFactIcon fact='fats' /> {meal.fats}</Chip>}
+                            {meal.carbs !== 0 && <Chip><NutritionalFactIcon fact='carbs' /> {meal.carbs}</Chip>}
                             <Chip variant='secondary' className='ms-auto'>
                                 {formatRelative(meal.mealTime, Date.now(), { locale: ru })}
                             </Chip>
