@@ -5,17 +5,17 @@ import {addDays, addMilliseconds, formatRelative, set} from "date-fns";
 import {
     Button,
     Card,
-    CardContent,
-    Chip,
-    ProgressBar,
+    Chip, Meter,
     Separator
 } from "@heroui/react";
 import {zMeal} from "#/entities/meal.ts";
 import {ru} from "date-fns/locale";
-import {CakeSlice, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
-import {zTarget} from "#/entities/target.ts";
+import {CakeSlice, Check, Cog, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
+import {type Target, zTarget} from "#/entities/target.ts";
 import NothingFound from "#/components/nothing-found.tsx";
 import DaySelector from "#/routes/meals/-components/day-selector.tsx";
+import type {NutritionFacts} from "#/entities/nutrition-facts.ts";
+import NutritionalFactIcon, {type NutritionalFactName} from "#/components/nutritional-fact-icon.tsx";
 
 const zSearch = z.object({
     day: z.iso.date().optional().catch(undefined)
@@ -76,50 +76,17 @@ function RouteComponent() {
     return <div className='flex flex-col gap-4 mx-auto'>
         <DaySelector day={day} setDay={setDay} />
         <Card>
-            <Card.Header>
-                <Card.Title className='font-semibold text-lg text-center'>Статистика за день</Card.Title>
+            <Card.Header className='flex flex-row gap-2'>
+                <Card.Title className='font-semibold text-lg text-center grow'>Статистика за день</Card.Title>
+                <Link to='/targets'>
+                    <Button size='sm'><Cog /></Button>
+                </Link>
             </Card.Header>
             <Card.Content className='grid grid-cols-2 lg:grid-cols-4 gap-2'>
-                <Chip className='items-center gap-1'>
-                    <Zap />
-                    <span className='whitespace-nowrap'>{`${Math.floor(facts.calories)} / ${target?.calories ?? 0}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories'
-                                 value={target ? facts.calories / target.calories * 100 : 100}>
-                        <ProgressBar.Track>
-                            <ProgressBar.Fill />
-                        </ProgressBar.Track>
-                    </ProgressBar>
-                </Chip>
-                <Chip className='items-center gap-1'>
-                    <Drumstick />
-                    <span className='whitespace-nowrap'>{`${Math.floor(facts.protein)} / ${target?.protein ?? 0}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories'
-                                 value={target ? facts.protein / target.protein * 100 : 100}>
-                        <ProgressBar.Track>
-                            <ProgressBar.Fill />
-                        </ProgressBar.Track>
-                    </ProgressBar>
-                </Chip>
-                <Chip className='items-center gap-1'>
-                    <Hamburger />
-                    <span className='whitespace-nowrap'>{`${Math.floor(facts.fats)} / ${target?.fats ?? 0}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories'
-                                 value={target ? facts.fats / target.fats * 100 : 100}>
-                        <ProgressBar.Track>
-                            <ProgressBar.Fill />
-                        </ProgressBar.Track>
-                    </ProgressBar>
-                </Chip>
-                <Chip className='items-center gap-1'>
-                    <CakeSlice />
-                    <span className='whitespace-nowrap'>{`${Math.floor(facts.carbs)} / ${target?.carbs ?? 0}`}</span>
-                    <ProgressBar className='gap-0' aria-label='Calories'
-                                 value={target ? facts.carbs / target.carbs * 100 : 100}>
-                        <ProgressBar.Track>
-                            <ProgressBar.Fill />
-                        </ProgressBar.Track>
-                    </ProgressBar>
-                </Chip>
+                <NutritionalFactDisplay target={target} facts={facts} fact='calories' />
+                <NutritionalFactDisplay target={target} facts={facts} fact='protein' />
+                <NutritionalFactDisplay target={target} facts={facts} fact='fats' />
+                <NutritionalFactDisplay target={target} facts={facts} fact='carbs' />
             </Card.Content>
         </Card>
         <h2 className='text-center font-semibold text-lg'>Приёмы пищи</h2>
@@ -128,7 +95,7 @@ function RouteComponent() {
             {meals.length > 0 ? meals.map(meal => (
                 <Link key={meal.id} to='/meals/$id' params={{ id: meal.id }}>
                     <Card>
-                        <CardContent className='flex flex-row flex-wrap gap-2 items-center'>
+                        <Card.Content className='flex flex-row flex-wrap gap-2 items-center'>
                             <h2 className='text-lg font-semibold'>{meal.name}</h2>
                             <Chip><Zap /> {meal.calories}</Chip>
                             <Chip><Drumstick /> {meal.protein}</Chip>
@@ -137,7 +104,7 @@ function RouteComponent() {
                             <Chip variant='secondary' className='ms-auto'>
                                 {formatRelative(meal.mealTime, Date.now(), { locale: ru })}
                             </Chip>
-                        </CardContent>
+                        </Card.Content>
                     </Card>
                 </Link>
             )) : <NothingFound />}
@@ -148,4 +115,31 @@ function RouteComponent() {
             </Link>
         </div>
     </div>
+}
+
+function NutritionalFactDisplay({ target, facts, fact } : {
+    target: Target | null,
+    facts: NutritionFacts,
+    fact: NutritionalFactName
+}) {
+    const value = target ? facts[fact] / target[fact] * 100 : 100;
+    const color = (105 >= value && 95 <= value)
+        ? 'success'
+        : value < 95 ? 'accent' : 'danger';
+
+    return (
+        <Chip className='flex-col gap-1 p-4'>
+            <div className='flex flex-row gap-1 items-center'>
+                <NutritionalFactIcon fact={fact} />
+                <span className='whitespace-nowrap'>{`${Math.floor(facts[fact])} / ${target ? target[fact] : 0}`}</span>
+                {color == 'success' && <Check color='var(--color-accent)' />}
+            </div>
+            <Meter color={color} className='gap-0' aria-label={fact}
+                         value={value}>
+                <Meter.Track className='bg-background-tertiary'>
+                    <Meter.Fill />
+                </Meter.Track>
+            </Meter>
+        </Chip>
+    )
 }
