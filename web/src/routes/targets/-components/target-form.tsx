@@ -5,11 +5,12 @@ import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
 import {useNavigate} from "@tanstack/react-router";
 import {pb} from "#/pb.ts";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
-import {Button, ButtonGroup, Input, Spinner} from "@heroui/react";
-import {format} from "date-fns";
+import {Button, ButtonGroup, Spinner} from "@heroui/react";
+import {addMinutes, format} from "date-fns";
 import BackButton from "#/components/back-button.tsx";
 import {Calculator, Trash} from "lucide-react";
 import {RootRoute} from "#/routes/__root.tsx";
+import DaySelector from "#/components/day-selector.tsx";
 
 const zValidator = z.object({
     id: z.string().optional(),
@@ -63,10 +64,9 @@ export default function TargetForm({ target } : {
             <BackButton />
             <form.Field name='activeFrom'>
                 {field => (
-                    <Input
-                        type='date'
-                        value={format(field.state.value, `yyyy-MM-dd`)}
-                        onChange={e => field.handleChange(new Date(e.target.value))}
+                    <DaySelector
+                        day={format(field.state.value, 'yyyy-MM-dd')}
+                        setDay={e => field.handleChange(addMinutes(new Date(e!), -new Date().getTimezoneOffset()))}
                     />
                 )}
             </form.Field>

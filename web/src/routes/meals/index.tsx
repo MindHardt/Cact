@@ -13,7 +13,7 @@ import {ru} from "date-fns/locale";
 import {CakeSlice, Check, Cog, Drumstick, Hamburger, Plus, Zap} from "lucide-react";
 import {type Target, zTarget} from "#/entities/target.ts";
 import NothingFound from "#/components/nothing-found.tsx";
-import DaySelector from "#/routes/meals/-components/day-selector.tsx";
+import DaySelector from "#/components/day-selector.tsx";
 import type {NutritionFacts} from "#/entities/nutrition-facts.ts";
 import NutritionalFactIcon, {type NutritionalFactName} from "#/components/nutritional-fact-icon.tsx";
 
