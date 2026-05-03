@@ -12,6 +12,8 @@ import AuthHeader from "#/routes/-auth-header.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {useRef} from "react";
 import Footer from "#/routes/-footer.tsx";
+import NotFoundComponent from "#/routes/-not-found-component.tsx";
+import ErrorComponent from "#/routes/-error-component.tsx";
 
 export const Route = createRootRoute({
     component: RootComponent,
@@ -29,6 +31,8 @@ export const Route = createRootRoute({
             user: zUser.nullish().parse(pb.authStore.record),
         }
     },
+    notFoundComponent: NotFoundComponent,
+    errorComponent: ErrorComponent,
     loader: async () => ({
         providers: await pb.collection('users').listAuthMethods().then(x => x.oauth2.providers)
     })

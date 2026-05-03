@@ -1,12 +1,15 @@
 import {createFileRoute, useRouter} from '@tanstack/react-router'
-import {pb} from "#/pb.ts";
+import {catchNotFound, pb} from "#/pb.ts";
 import {zFood} from "#/entities/food.ts";
 import {Button, Card, Surface} from "@heroui/react";
 
 export const Route = createFileRoute('/foods/$id')({
   component: RouteComponent,
   loader: async ({ params: { id }}) => ({
-    food: await pb.collection('foods').getOne(id).then(x => zFood.parse(x))
+    food: await pb.collection('foods')
+        .getOne(id)
+        .then(x => zFood.parse(x))
+        .catch(catchNotFound)
   })
 })
 
