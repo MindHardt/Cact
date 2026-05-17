@@ -1,5 +1,6 @@
 injectWorkspacePackages: true
 packages:
   - web
+  - api
 syncInjectedDepsAfterScripts:
   - build

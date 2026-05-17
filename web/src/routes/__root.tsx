@@ -8,6 +8,7 @@ import "@fontsource/open-sans/500.css";
 import {Surface} from "@heroui/react";
 import {pb} from "#/pb.ts";
 import {zUser} from "#/entities/user.ts";
+import {api} from "#/api.ts";
 import AuthHeader from "#/routes/-auth-header.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {useRef} from "react";
