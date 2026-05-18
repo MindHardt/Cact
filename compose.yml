@@ -36,3 +36,12 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  s3:
+    restart: unless-stopped
+    image: rustfs/rustfs:latest
+    ports: [ "9000:9000", "9001:9001" ]
+    volumes: [ "./.docker-volumes/rustfs:/data" ]
+    environment:
+      RUSTFS_ACCESS_KEY: cact_api
+      RUSTFS_SECRET_KEY: cact_api

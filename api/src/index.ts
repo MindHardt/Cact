@@ -5,6 +5,9 @@ import {authMiddleware, type UserContext} from "./infra/auth-middleware.js";
 import {z} from "zod";
 import { cors } from "hono/cors";
 import {foodsRouter} from "./features/foods/foods-router.js";
+import {uploadsRouter} from "./features/uploads/uploads-router.js";
+import {Scalar} from "@scalar/hono-api-reference";
+import {openAPIRouteHandler} from "hono-openapi";
 
 const config = z.object({
   PORT: z.coerce.number().int().default(3001),
@@ -14,24 +17,50 @@ const config = z.object({
 export type HonoType = {
   Variables: UserContext
 };
-const app = new Hono<HonoType>().basePath('/api')
+const app = new Hono<HonoType>();
 
-app.use("*", cors({
+if (process.env.NODE_ENV === "development") {
+  app.get('/', c => c.redirect('/api/scalar'))
+}
+
+const api = app.basePath('/api')
+
+api.use("*", cors({
   origin: config.CORS_ORIGINS,
   credentials: true
 }))
 
-app.use("*", authMiddleware)
+api.use("*", authMiddleware)
 
-app.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
+api.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
 
-let route = app.route('/foods', foodsRouter)
+api.get(
+    '/openapi',
+    openAPIRouteHandler(api, {
+      documentation: {
+        info: {
+          title: 'Cact api',
+          version: '1.0.0',
+          description: 'Cact app main api',
+        },
+        servers: [
+          { url: 'http://localhost:3001', description: 'Local Server' },
+        ],
+      },
+    })
+)
+
+api.get('/scalar', Scalar({ url: '/api/openapi' }))
+
+const withFoods = api.route('/foods', foodsRouter);
+const withUploads = withFoods.route('/uploads', uploadsRouter);
 
 serve({
-  fetch: app.fetch,
+  fetch: api.fetch,
   port: config.PORT
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
 })
 
-export type ApiType = typeof route;
+const final = withUploads;
+export type ApiType = typeof final;
