@@ -1,11 +1,11 @@
 import {Hono} from "hono";
-import type {HonoType} from "../../index.js";
-import {postUpload, zPostUploadsForm} from "./post-upload.js";
+import type {HonoType} from "../../index";
+import {postUpload, zPostUploadsForm} from "./post-upload";
 import {validator} from "hono-openapi";
-import {getUpload, zGetUploadParams} from "./get-upload.js";
-import {deleteUpload, zDeleteUploadParams} from "./delete-upload.js";
-import {getUploads, zGetUploadsQuery} from "./get-uploads.js";
-import {requireAuthenticatedUser} from "../../auth/require-authenticated-user.js";
+import {getUpload, zGetUploadParams} from "./get-upload";
+import {deleteUpload, zDeleteUploadParams} from "./delete-upload";
+import {getUploads, zGetUploadsQuery} from "./get-uploads";
+import {requireAuthenticatedUser} from "../../auth/require-authenticated-user";
 
 
 export const uploadsRouter = new Hono<HonoType>()

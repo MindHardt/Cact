@@ -1,5 +1,5 @@
 import type {Hono} from "hono";
-import type {HonoType} from "../index.js";
+import type {HonoType} from "../index";
 
 
 export type EndpointFn<

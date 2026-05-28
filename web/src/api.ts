@@ -3,9 +3,10 @@ import { hc } from "hono/client";
 import type {ApiType} from "../../api/src";
 
 export const { VITE_API_URL } = z.object({
-    VITE_API_URL: z.string().nonempty()
+    VITE_API_URL: z.url().nonempty()
 }).parse(import.meta.env);
 
 export const { api } = hc<ApiType>(VITE_API_URL);
 
-api.foods.$get({ query: {} })
+export const uploadUrl = (uploadId: string) =>
+    VITE_API_URL + '/api/uploads/' + uploadId;

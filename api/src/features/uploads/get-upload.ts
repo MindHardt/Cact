@@ -1,13 +1,14 @@
 import type {Context} from "hono";
 import {z} from "zod";
-import {s3, s3Bucket, s3Key} from "./s3.js";
+import {s3, s3Bucket, s3Key} from "./s3";
 import {GetObjectCommand} from "@aws-sdk/client-s3";
-import {db} from "../../data/db.js";
-import {uploads} from "./upload-schema.js";
+import {db} from "../../data/db";
+import {uploads} from "./upload-schema";
 import { sql } from "drizzle-orm";
+import {zUpload} from "cact-shared/zUpload";
 
-export const zGetUploadParams = z.object({
-    id: z.uuid()
+export const zGetUploadParams = zUpload.pick({
+    id: true
 });
 
 export async function getUpload({ c, params } : {

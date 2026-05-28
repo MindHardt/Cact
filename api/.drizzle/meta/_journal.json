@@ -22,6 +22,20 @@
       "when": 1779052895422,
       "tag": "0002_added-uploads",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779983210940,
+      "tag": "0003_added-food-images",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779995510846,
+      "tag": "0004_added-meals",
+      "breakpoints": true
     }
   ]
 }

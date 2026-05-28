@@ -1,2 +1,16 @@
 node_modules
 .docker-volumes
+
+# Webstorm
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/usage.statistics.csv
+.idea/shelf/
+.idea/dictionaries/
+.idea/caches/
+.idea/logs/
+.idea/*.tmp
+.idea/generated/
+.idea/plugins/
+.idea/[pP]lugin[ss]*/

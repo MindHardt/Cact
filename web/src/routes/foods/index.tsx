@@ -1,16 +1,17 @@
 import {createFileRoute, useNavigate, useRouterState} from '@tanstack/react-router'
 import {z} from "zod";
-import {pb} from "#/pb.ts";
-import {zFood} from "#/entities/food.ts";
 import FoodCard from "#/components/food-card.tsx";
 import NothingFound from "#/components/nothing-found.tsx";
 import {useDebouncer} from "@tanstack/react-pacer";
 import {Button, InputGroup} from "@heroui/react";
 import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
 import {LoaderCircle, Search} from "lucide-react";
+import {api} from "#/api.ts";
+import {pagination, zPaginatedResponse} from "cact-shared/pagination.ts";
+import {zFood} from "cact-shared/zFood.ts";
 
 const zSearch = z.object({
-    page: z.number().optional(),
+    page: z.number().positive().optional(),
     q: z.string().optional().transform(x => x && x.length > 0 ? x : undefined)
 })
 
@@ -19,11 +20,11 @@ export const Route = createFileRoute('/foods/')({
     validateSearch: zSearch,
     loaderDeps: ({ search: { page, q }}) => ({ page, q }),
     loader: async ({ deps: { page, q }}) => ({
-        foods: await pb.collection('foods')
-            .getList(page ?? 1, 12, {
-                filter: q ? `tags ~ "${q.toLocaleLowerCase()}"` : undefined,
-                sort: 'name'
-            }).then(x => x.items.map(i => zFood.parse(i)))
+        foods: await api.foods.$get({ query: {
+                search: q, ...pagination(page, 24)
+            }})
+            .then(x => x.json())
+            .then(x => zPaginatedResponse(zFood).parse(x))
     })
 })
 
@@ -38,10 +39,10 @@ function RouteComponent() {
         { wait: 250 },
     )
 
-    const SearchResult = foods.length === 0
+    const SearchResult = foods.total === 0
         ? <NothingFound />
         : <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {foods.map(food => <FoodCard withLink key={food.id} food={food} />)}
+            {foods.data.map(food => <FoodCard withLink key={food.id} food={food} />)}
         </div>
 
     return <div className='flex flex-col gap-4'>

@@ -1,8 +1,7 @@
-import type {Food} from "#/entities/food.ts";
 import {Link} from "@tanstack/react-router";
 import {Card} from "@heroui/react";
-import {pb} from "#/pb.ts";
-
+import {uploadUrl} from "#/api";
+import type {Food} from "cact-shared/zFood";
 
 export default function FoodCard({ food, withLink } : {
     withLink?: boolean,
@@ -14,7 +13,7 @@ export default function FoodCard({ food, withLink } : {
             <img
                 className='max-w-full max-h-full'
                 alt=''
-                src={food.image ? pb.files.getURL(food, food.image) : '/food.svg'}
+                src={food.imageId ? uploadUrl(food.imageId) : '/food.svg'}
                 loading='lazy'
             />
         </div>

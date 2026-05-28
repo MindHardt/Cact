@@ -1,10 +1,11 @@
 import {z} from "zod";
-import {uploads, uploadScopes, zUpload, zUploadScopeName} from "./upload-schema.js";
-import {db} from "../../data/db.js";
-import {s3, s3Bucket, s3Key} from "./s3.js";
+import {uploads} from "./upload-schema";
+import {uploadScopes, zUpload, zUploadScopeName} from "cact-shared/zUpload";
+import {db} from "../../data/db";
+import {s3, s3Bucket, s3Key} from "./s3";
 import {Upload} from "@aws-sdk/lib-storage";
 import type {Context} from "hono";
-import type {HonoType} from "../../index.js";
+import type {HonoType} from "../../index";
 
 
 export const zPostUploadsForm = z.object({

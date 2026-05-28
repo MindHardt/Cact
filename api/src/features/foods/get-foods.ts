@@ -1,9 +1,10 @@
 import {z} from "zod";
-import {db} from "../../data/db.js";
-import {foods, zFood} from "./food-schema.js";
+import {db} from "../../data/db";
+import {foods} from "./food-schema";
+import {zFood} from "cact-shared/zFood";
 import {count, like} from "drizzle-orm";
 import type { Context } from "hono";
-import {zPaginatedRequest, zPaginatedResponse} from "../../infra/pagination.js";
+import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination";
 
 export const zListFoodsQuery = zPaginatedRequest.extend({
     search: z.string().optional()

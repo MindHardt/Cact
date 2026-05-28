@@ -1,7 +1,7 @@
 import {pgTable, text, timestamp, uuid, smallint, bigint} from "drizzle-orm/pg-core";
 import {uuidv7} from "uuidv7";
-import {users} from "../../data/schemas/auth-schema.js";
-import {z} from "zod";
+import {users} from "../../data/schemas/auth-schema";
+import type {UploadScope} from "cact-shared/zUpload";
 
 
 export const uploads = pgTable('uploads', {
@@ -12,27 +12,4 @@ export const uploads = pgTable('uploads', {
     size: bigint({ mode: 'number' }).notNull(),
     uploaderId: uuid('uploader_id').references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp('created_at').defaultNow(),
-})
-
-export const uploadScopes = {
-    USER_AVATAR: 1,
-    FOOD_IMAGE: 2,
-} as const
-export const uploadScopeNames : Record<UploadScope, UploadScopeName> = {
-    1: 'USER_AVATAR',
-    2: 'FOOD_IMAGE',
-}
-export const zUploadScope = z.enum(uploadScopes);
-export const zUploadScopeName = z.object(uploadScopes).keyof()
-export type UploadScope = z.infer<typeof zUploadScope>;
-export type UploadScopeName = z.infer<typeof zUploadScopeName>
-
-export const zUpload = z.object({
-    id: z.uuid(),
-    fileName: z.string(),
-    contentType: z.string(),
-    scope: zUploadScope.transform(x => uploadScopeNames[x]).pipe(zUploadScopeName),
-    size: z.number(),
-    uploaderId: z.uuid().nullable(),
-    createdAt: z.coerce.date()
 })

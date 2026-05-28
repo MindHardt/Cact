@@ -1,13 +1,15 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import { auth } from "./auth/index.js";
-import {authMiddleware, type UserContext} from "./infra/auth-middleware.js";
+import { auth } from "./auth/index";
+import {authMiddleware, type UserContext} from "./infra/auth-middleware";
 import {z} from "zod";
 import { cors } from "hono/cors";
-import {foodsRouter} from "./features/foods/foods-router.js";
-import {uploadsRouter} from "./features/uploads/uploads-router.js";
+import {foodsRouter} from "./features/foods/foods-router";
+import {uploadsRouter} from "./features/uploads/uploads-router";
 import {Scalar} from "@scalar/hono-api-reference";
 import {openAPIRouteHandler} from "hono-openapi";
+import {autoMigrate} from "./data/db";
+import {mealsRouter} from "./features/meals/meals-router";
 
 const config = z.object({
   PORT: z.coerce.number().int().default(3001),
@@ -52,15 +54,17 @@ api.get(
 
 api.get('/scalar', Scalar({ url: '/api/openapi' }))
 
-const withFoods = api.route('/foods', foodsRouter);
-const withUploads = withFoods.route('/uploads', uploadsRouter);
+export const final = api
+    .route('/foods', foodsRouter)
+    .route('/uploads', uploadsRouter)
+    .route('/meals', mealsRouter);
+export type ApiType = typeof final;
+
+await autoMigrate();
 
 serve({
-  fetch: api.fetch,
+  fetch: final.fetch,
   port: config.PORT
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
 })
-
-const final = withUploads;
-export type ApiType = typeof final;
