@@ -11,6 +11,8 @@ node_modules
 .idea/caches/
 .idea/logs/
 .idea/*.tmp
+.idea/*.local.xml
 .idea/generated/
+.idea/dataSources/
 .idea/plugins/
 .idea/[pP]lugin[ss]*/
