@@ -18,3 +18,5 @@ export const s3 = new S3Client({
     forcePathStyle: true
 });
 export const s3Bucket = S3_BUCKET;
+
+export const s3Key = (uploadId: string) => `uploads/${uploadId}`;

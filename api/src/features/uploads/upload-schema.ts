@@ -15,12 +15,12 @@ export const uploads = pgTable('uploads', {
 })
 
 export const uploadScopes = {
-    userAvatar: 1,
-    foodImage: 2,
+    USER_AVATAR: 1,
+    FOOD_IMAGE: 2,
 } as const
 export const uploadScopeNames : Record<UploadScope, UploadScopeName> = {
-    1: 'userAvatar',
-    2: 'foodImage',
+    1: 'USER_AVATAR',
+    2: 'FOOD_IMAGE',
 }
 export const zUploadScope = z.enum(uploadScopes);
 export const zUploadScopeName = z.object(uploadScopes).keyof()

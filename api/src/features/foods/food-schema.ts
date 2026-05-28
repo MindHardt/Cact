@@ -10,7 +10,7 @@ export const foods = pgTable('foods', {
     id: uuid('id').primaryKey().$default(() => uuidv7()),
     name: text('name').notNull(),
     description: text('description'),
-    facts: jsonb('facts').$type<NutritionalFacts>(),
+    facts: jsonb('facts').$type<NutritionalFacts>().notNull(),
     authorId: uuid('author_id').references(() => users.id, { onDelete: "set null" }),
     tags: text('tags')
         .notNull()
@@ -32,3 +32,5 @@ export const zFood = z.object({
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date()
 });
+
+export type Food = z.infer<typeof zFood>;

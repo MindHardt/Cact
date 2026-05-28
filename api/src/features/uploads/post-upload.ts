@@ -1,9 +1,10 @@
 import {z} from "zod";
-import {uploads, uploadScopes, zUpload, zUploadScope, zUploadScopeName} from "./upload-schema.js";
+import {uploads, uploadScopes, zUpload, zUploadScopeName} from "./upload-schema.js";
 import {db} from "../../data/db.js";
-import {s3, s3Bucket} from "./s3.js";
+import {s3, s3Bucket, s3Key} from "./s3.js";
 import {Upload} from "@aws-sdk/lib-storage";
 import type {Context} from "hono";
+import type {HonoType} from "../../index.js";
 
 
 export const zPostUploadsForm = z.object({
@@ -12,15 +13,17 @@ export const zPostUploadsForm = z.object({
 })
 
 export async function postUpload({ c, form } : {
-    c: Context,
+    c: Context<HonoType>,
     form: z.infer<typeof zPostUploadsForm>
 }) {
 
     const { file, scope } = form;
+    const userId = c.get('user')!.id;
 
     const [upload] = await db
         .insert(uploads)
         .values({
+            uploaderId: userId,
             scope: uploadScopes[scope],
             size: file.size,
             fileName: file.name,
@@ -32,7 +35,7 @@ export async function postUpload({ c, form } : {
         client: s3,
         params: {
             Bucket: s3Bucket,
-            Key: `uploads/${upload.id}`,
+            Key: s3Key(upload.id),
             ContentType: file.type,
             Body: file,
         }

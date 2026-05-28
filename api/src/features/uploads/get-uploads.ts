@@ -2,12 +2,13 @@ import {zPaginatedRequest, zPaginatedResponse} from "../../infra/pagination.js";
 import {z} from "zod";
 import type {Context} from "hono";
 import {db} from "../../data/db.js";
-import {uploads, zUpload} from "./upload-schema.js";
+import {uploads, uploadScopes, zUpload, zUploadScopeName} from "./upload-schema.js";
 import {ilike, eq, and, count} from "drizzle-orm";
 
 export const zGetUploadsQuery = zPaginatedRequest.extend({
     search: z.string().optional(),
-    contentType: z.string().optional()
+    contentType: z.string().optional(),
+    scope: zUploadScopeName.optional()
 })
 
 export async function getUploads({ c, query } : {
@@ -15,10 +16,11 @@ export async function getUploads({ c, query } : {
     query: z.infer<typeof zGetUploadsQuery>
 }) {
 
-    const { search, contentType, skip, take } = query;
+    const { search, contentType, scope, skip, take } = query;
     const filter = and(
         search ? ilike(uploads.fileName, `%${search}%`) : undefined,
-        contentType ? ilike(uploads.contentType, contentType.replace('*', '%')) : undefined
+        contentType ? ilike(uploads.contentType, contentType.replace('*', '%')) : undefined,
+        scope ? eq(uploads.scope, uploadScopes[scope]) : undefined,
     )
 
     const [{ total }] = await db

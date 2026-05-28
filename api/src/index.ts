@@ -1,6 +1,6 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import { auth } from "./auth.js";
+import { auth } from "./auth/index.js";
 import {authMiddleware, type UserContext} from "./infra/auth-middleware.js";
 import {z} from "zod";
 import { cors } from "hono/cors";

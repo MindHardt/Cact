@@ -1,5 +1,5 @@
 import type {Context, Next} from "hono";
-import {auth} from "../auth.js";
+import {auth} from "../auth/index.js";
 
 export type UserContext = {
     user: typeof auth.$Infer.Session.user | null
