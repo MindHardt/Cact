@@ -1,6 +1,6 @@
 import type {Context} from "hono";
 import {z} from "zod";
-import {s3, s3Bucket, s3Key} from "./s3.js";
+import {s3, s3Bucket, s3Key} from "../../infra/s3.js";
 import {GetObjectCommand} from "@aws-sdk/client-s3";
 import {db} from "../../data/db.js";
 import {uploads} from "./upload-schema.js";

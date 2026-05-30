@@ -28,7 +28,7 @@ services:
       dockerfile: ./api/Dockerfile
     env_file:
       - path: ./api/.env
-      - path: ./api/.env.local
+      - path: api/.env.local
         required: false
     ports: [ "3001:3001" ]
     environment:

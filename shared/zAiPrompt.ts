@@ -1,9 +1,9 @@
 import {z} from "zod";
 import {zNutritionalFacts} from "./extras.js";
 
-const zFoodItem = z.object({
+export const zFoodItem = z.object({
     name: z.string(),
-    comment: z.string().optional(),
+    comment: z.string().nullable(),
     facts: zNutritionalFacts.nullable()
 });
 export type FoodItem = z.infer<typeof zFoodItem>

@@ -6,7 +6,7 @@ import {db} from "../../data/db.js";
 import {aiPrompts} from "./ai-prompt-schema.js";
 import {and, count, eq, gte, lte} from "drizzle-orm";
 import {addDays} from "date-fns";
-
+import {askAi} from "./ask-ai.js";
 
 export const zPostAiPromptsJson = zAiPrompt.pick({
     text: true
@@ -45,9 +45,19 @@ export async function postAiPromptsHandler({ c, json } : {
 
     let result;
     try {
-
-    } catch {
-        result = await db.update(aiPrompts)
+        const items = await askAi(json.text);
+        console.info('Received ai response', items);
+        [result] = await db.update(aiPrompts)
+            .set({
+                items,
+                respondedAt: new Date(),
+                status: aiPromptStatus.SUCCESS
+            })
+            .where(eq(aiPrompts.id, prompt.id))
+            .returning();
+    } catch (e) {
+        console.error('There was an error asking ai', e);
+        [result] = await db.update(aiPrompts)
             .set({ status: aiPromptStatus.ERROR })
             .where(eq(aiPrompts.id, prompt.id))
             .returning();

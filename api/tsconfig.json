@@ -21,6 +21,6 @@
   "references": [
     { "path": "../shared" }
   ],
-  "include": ["src", ".drizzle"],
+  "include": ["src", ".drizzle", "*.md"],
   "exclude": ["node_modules"]
 }

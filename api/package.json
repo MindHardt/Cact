@@ -3,7 +3,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "dotenvx run -f .env.local --ignore=MISSING_ENV_FILE -- tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/src/index.js"
   },
@@ -11,6 +11,7 @@
     "@aws-sdk/client-s3": "^3.1048.0",
     "@aws-sdk/lib-storage": "^3.1048.0",
     "@better-auth/drizzle-adapter": "^1.6.9",
+    "@dotenvx/dotenvx": "^1.69.1",
     "@hono/node-server": "^1.19.14",
     "@hono/standard-validator": "^0.2.2",
     "@hono/zod-validator": "^0.8.0",

@@ -9,7 +9,8 @@ const oauthConfig = z.union([
     z.object({
         GITHUB_CLIENT_ID: z.string().nonempty(),
         GITHUB_CLIENT_SECRET: z.string().nonempty()
-    })
+    }),
+    z.object({})
 ]).parse(process.env);
 
 

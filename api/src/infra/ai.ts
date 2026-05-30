@@ -8,5 +8,8 @@ const config = z.object({
 
 export const ai = new OpenAI({
     baseURL: config.AI_BASE_URL,
-    apiKey: config.AI_API_KEY
+    apiKey: config.AI_API_KEY,
+    defaultHeaders: {
+        'Authorization': `Bearer ${config.AI_API_KEY}`
+    }
 });
