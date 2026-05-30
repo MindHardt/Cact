@@ -4,6 +4,7 @@ import {db} from "../data/db.js";
 import {openAPI} from "better-auth/plugins";
 import {uuidv7} from "uuidv7";
 import {z} from "zod";
+import {ALLOWED_ORIGINS} from "../infra/origins.js";
 
 const oauthConfig = z.union([
     z.object({
@@ -15,6 +16,7 @@ const oauthConfig = z.union([
 
 
 export const auth = betterAuth({
+    trustedOrigins: ALLOWED_ORIGINS,
     database: drizzleAdapter(db, {
         provider: 'pg',
         usePlural: true

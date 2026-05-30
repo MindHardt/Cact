@@ -1,15 +1,14 @@
 import {RootRoute} from "#/routes/__root.tsx";
 import {Avatar, Button, Dropdown, Header, Label, Separator} from "@heroui/react";
-import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
-import {pb} from "#/pb.ts";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {Lock} from "lucide-react";
 import Logo from "#/components/logo.tsx";
+import {auth, type User} from "#/api.ts";
 
 
 export default function AuthHeader() {
 
-    const { user } = RootRoute.useRouteContext();
+    const { auth: { user }} = RootRoute.useRouteContext();
 
     const Controls = user
         ? <UserControls user={user} />
@@ -25,16 +24,22 @@ export default function AuthHeader() {
 
 function UserControls({ user } : { user: User }) {
 
+    function avatarFallback(user: User) {
+        return user.name
+            .split(' ', 2)
+            .map(x => x[0]?.toUpperCase() ?? '')
+            .join('');
+    }
     const navigate = useNavigate();
     const logout = async () => {
-        pb.authStore.clear();
+        await auth.signOut();
         await navigate({ to: '.' });
     }
 
     return <Dropdown>
         <Dropdown.Trigger className='flex flex-row gap-1 items-center justify-center'>
             <Avatar>
-                <Avatar.Image alt={user.name} src={avatarSrc(user, { thumb: '40x40f' })} />
+                <Avatar.Image alt={user.name} src={user.image ?? undefined} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
         </Dropdown.Trigger>
@@ -62,10 +67,16 @@ function UserControls({ user } : { user: User }) {
 function LoginControls() {
 
     const navigate = useNavigate();
-    const { providers } = RootRoute.useLoaderData();
-    const login = async (key: number | string) => pb
-        .collection('users')
-        .authWithOAuth2({ provider: typeof key === 'number' ? providers[key].name : key })
+    const providers = [{
+        name: 'github', displayName: 'GitHub'
+    }];
+    const login = async (key: number | string) => auth
+        .signIn.social({
+            provider: typeof key === 'number' ? providers[key].name : key,
+            callbackURL: window.location.href,
+            errorCallbackURL: window.location.href,
+            newUserCallbackURL: window.location.href
+        })
         .then(() => navigate({ to: '.' }))
 
     if (providers.length == 1) {

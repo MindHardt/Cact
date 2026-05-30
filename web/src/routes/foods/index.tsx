@@ -7,8 +7,8 @@ import {Button, InputGroup} from "@heroui/react";
 import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
 import {LoaderCircle, Search} from "lucide-react";
 import {api} from "#/api.ts";
-import {pagination, zPaginatedResponse} from "cact-shared/pagination.ts";
-import {zFood} from "cact-shared/zFood.ts";
+import {pagination, zPaginatedResponse} from "cact-shared/pagination.js";
+import {zFood} from "cact-shared/zFood.js";
 
 const zSearch = z.object({
     page: z.number().positive().optional(),

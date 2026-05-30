@@ -2,7 +2,6 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { auth } from "./auth/index.js";
 import {authMiddleware, type UserContext} from "./auth/auth-middleware.js";
-import {z} from "zod";
 import { cors } from "hono/cors";
 import {foodsRouter} from "./features/foods/foods-router.js";
 import {uploadsRouter} from "./features/uploads/uploads-router.js";
@@ -12,11 +11,7 @@ import {autoMigrate} from "./data/db.js";
 import {mealsRouter} from "./features/meals/meals-router.js";
 import {aiPromptsRouter} from "./features/ai-prompts/ai-prompts-router.js";
 import {targetsRouter} from "./features/targets/targets-router.js";
-
-const config = z.object({
-  PORT: z.coerce.number().int().default(3001),
-  CORS_ORIGINS: z.string().default('http://localhost:3000').transform(x => x.split(','))
-}).parse(process.env);
+import {ALLOWED_ORIGINS} from "./infra/origins.js";
 
 export type HonoType = {
   Variables: UserContext
@@ -30,7 +25,7 @@ if (process.env.NODE_ENV === "development") {
 const api = app.basePath('/api')
 
 api.use("*", cors({
-  origin: config.CORS_ORIGINS,
+  origin: ALLOWED_ORIGINS,
   credentials: true
 }))
 
@@ -67,7 +62,7 @@ export type ApiType = typeof final;
 
 autoMigrate().then(() => serve({
   fetch: final.fetch,
-  port: config.PORT
+  port: 3001
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
 }));

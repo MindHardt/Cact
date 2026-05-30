@@ -6,36 +6,23 @@ import '../styles.css';
 import '../theme.css';
 import "@fontsource/open-sans/500.css";
 import {Surface} from "@heroui/react";
-import {pb} from "#/pb.ts";
-import {zUser} from "#/entities/user.ts";
 import AuthHeader from "#/routes/-auth-header.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {useRef} from "react";
 import Footer from "#/routes/-footer.tsx";
 import NotFoundComponent from "#/routes/-not-found-component.tsx";
 import ErrorComponent from "#/routes/-error-component.tsx";
+import {auth} from "#/api.ts";
 
 export const Route = createRootRoute({
     component: RootComponent,
-    beforeLoad: async () => {
-        if (pb.authStore.token && !pb.authStore.isValid) {
-            await pb.collection('users').authRefresh().catch(e => {
-                if ('status' in e || e.status === 401) {
-                    pb.authStore.clear();
-                } else {
-                    throw e;
-                }
-            });
-        }
-        return {
-            user: zUser.nullish().parse(pb.authStore.record),
-        }
-    },
+    beforeLoad: async () => ({
+        auth: await auth.getSession().then(x => x.data ?? {
+            user: null, session: null
+        })
+    }),
     notFoundComponent: NotFoundComponent,
-    errorComponent: ErrorComponent,
-    loader: async () => ({
-        providers: await pb.collection('users').listAuthMethods().then(x => x.oauth2.providers)
-    })
+    errorComponent: ErrorComponent
 });
 
 export const RootRoute = Route;
