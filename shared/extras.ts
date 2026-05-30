@@ -10,4 +10,9 @@ export type NutritionalFacts = z.infer<typeof zNutritionalFacts>
 
 export function calculateCalories(facts: NutritionalFacts) {
     return (facts.protein * 4) + (facts.fats * 9) + (facts.carbs * 4);
-}
+};
+
+export const zDatetime =  z.union([
+    z.iso.datetime({ offset: true }).pipe(z.coerce.date()),
+    z.date()
+]);

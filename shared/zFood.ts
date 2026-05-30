@@ -1,5 +1,5 @@
 import z from "zod";
-import {zNutritionalFacts} from "./extras.js";
+import {zDatetime, zNutritionalFacts} from "./extras.js";
 
 export const zUnit = z.object({
     name: z.string().nonempty(),
@@ -16,8 +16,8 @@ export const zFood = z.object({
     authorId: z.uuid().nullable(),
     imageId: z.uuid().nullable(),
     units: z.array(zUnit).nonempty(),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date()
+    createdAt: zDatetime,
+    updatedAt: zDatetime
 });
 
 export type Food = z.infer<typeof zFood>;

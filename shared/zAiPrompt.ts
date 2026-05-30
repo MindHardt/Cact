@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {zNutritionalFacts} from "./extras.js";
+import {zDatetime, zNutritionalFacts} from "./extras.js";
 
 export const zFoodItem = z.object({
     name: z.string(),
@@ -26,8 +26,8 @@ export type AiPromptStatusName = z.infer<typeof zAiPromptStatusName>;
 
 export const zAiPrompt = z.object({
     id: z.uuid(),
-    createdAt: z.coerce.date(),
-    respondedAt: z.coerce.date().nullable(),
+    createdAt: zDatetime,
+    respondedAt: zDatetime.nullable(),
     text: z.string().nonempty(),
     status: zAiPromptStatus.transform(x => aiPromptStatusNames[x]).pipe(zAiPromptStatusName),
     items: z.array(zFoodItem).nullable()

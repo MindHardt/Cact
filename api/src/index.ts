@@ -11,6 +11,7 @@ import {openAPIRouteHandler} from "hono-openapi";
 import {autoMigrate} from "./data/db.js";
 import {mealsRouter} from "./features/meals/meals-router.js";
 import {aiPromptsRouter} from "./features/ai-prompts/ai-prompts-router.js";
+import {targetsRouter} from "./features/targets/targets-router.js";
 
 const config = z.object({
   PORT: z.coerce.number().int().default(3001),
@@ -60,7 +61,8 @@ export const final = api
     .route('/foods', foodsRouter)
     .route('/uploads', uploadsRouter)
     .route('/meals', mealsRouter)
-    .route('/ai-prompts', aiPromptsRouter);
+    .route('/ai-prompts', aiPromptsRouter)
+    .route('/targets', targetsRouter);
 export type ApiType = typeof final;
 
 autoMigrate().then(() => serve({

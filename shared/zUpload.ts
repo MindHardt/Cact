@@ -1,4 +1,5 @@
 import {z} from "zod";
+import {zDatetime} from "./extras.js";
 
 export const uploadScopes = {
     USER_AVATAR: 1,
@@ -20,5 +21,5 @@ export const zUpload = z.object({
     scope: zUploadScope.transform(x => uploadScopeNames[x]).pipe(zUploadScopeName),
     size: z.number(),
     uploaderId: z.uuid().nullable(),
-    createdAt: z.coerce.date()
+    createdAt: zDatetime
 })

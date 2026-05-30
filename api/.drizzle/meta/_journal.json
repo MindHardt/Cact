@@ -43,6 +43,13 @@
       "when": 1780052502303,
       "tag": "0005_added-ai-prompts",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780155187363,
+      "tag": "0006_added-targets",
+      "breakpoints": true
     }
   ]
 }
