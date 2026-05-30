@@ -21,9 +21,6 @@ export async function getMealsHandler({ query, c } : {
 }) {
     const userId = c.get('user')!.id;
     const { from, to, search, skip, take } = query;
-    if (from && to && from > to) {
-        return c.json(zGetMealsResponse.parse({ total: 0, data: [] }))
-    }
 
     const filter = and(
         eq(meals.userId, userId),

@@ -2,14 +2,17 @@ import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination.js";
 import {z} from "zod";
 import type {Context} from "hono";
 import type {HonoType} from "../../index.js";
-import {and, count, eq, ilike} from "drizzle-orm";
+import {and, count, desc, eq, gte, ilike, lte} from "drizzle-orm";
 import {aiPrompts} from "./ai-prompt-schema.js";
 import {db} from "../../data/db.js";
-import {zAiPrompt} from "cact-shared/zAiPrompt.js";
+import {aiPromptStatus, zAiPrompt, zAiPromptStatusName} from "cact-shared/zAiPrompt.js";
 
 
 export const zGetAiPromptsQuery = zPaginatedRequest.extend({
-    search: z.string().optional()
+    search: z.string().optional(),
+    status: zAiPromptStatusName.optional(),
+    from: z.coerce.date().optional(),
+    to: z.coerce.date().optional(),
 });
 const zGetAiPromptsResponse = zPaginatedResponse(zAiPrompt)
 
@@ -18,11 +21,14 @@ export async function getAiPromptsHandler({ c, query } : {
     query: z.infer<typeof zGetAiPromptsQuery>
 }) {
 
-    const { search, skip, take } = query;
+    const { search, skip, status, take, from, to } = query;
     const userId = c.get('user')!.id;
     const filter = and(
         eq(aiPrompts.userId, userId),
-        search ? ilike(aiPrompts.text, `%${search}%`) : undefined
+        search ? ilike(aiPrompts.text, `%${search}%`) : undefined,
+        status ? eq(aiPrompts.status, aiPromptStatus[status]) : undefined,
+        from ? gte(aiPrompts.createdAt, from) : undefined,
+        to ? lte(aiPrompts.createdAt, to) : undefined,
     )
     const [{ total }] = await db
         .select({ total: count(aiPrompts.id) })
@@ -32,7 +38,7 @@ export async function getAiPromptsHandler({ c, query } : {
         .select()
         .from(aiPrompts)
         .where(filter)
-        .orderBy(aiPrompts.id)
+        .orderBy(desc(aiPrompts.id))
         .offset(skip)
         .limit(take);
 
