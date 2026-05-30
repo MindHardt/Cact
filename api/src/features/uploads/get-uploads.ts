@@ -1,9 +1,9 @@
-import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination";
+import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination.js";
 import {z} from "zod";
 import type {Context} from "hono";
-import {db} from "../../data/db";
-import {uploads} from "./upload-schema";
-import {uploadScopes, zUpload, zUploadScopeName} from "cact-shared/zUpload";
+import {db} from "../../data/db.js";
+import {uploads} from "./upload-schema.js";
+import {uploadScopes, zUpload, zUploadScopeName} from "cact-shared/zUpload.js";
 import {ilike, eq, and, count} from "drizzle-orm";
 
 export const zGetUploadsQuery = zPaginatedRequest.extend({

@@ -22,6 +22,20 @@ services:
         VITE_POCKETBASE_URL: http://localhost:8080
     ports: [ "3000:80" ]
 
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    env_file:
+      - path: ./api/.env
+      - path: ./api/.env.local
+        required: false
+    ports: [ "3001:3001" ]
+    environment:
+      NODE_ENV: staging
+      DATABASE_URL: postgres://cact_api:cact_api@postgres:5432/cact_api
+      S3_ENDPOINT: http://s3:9001
+
   postgres:
     restart: unless-stopped
     image: postgres:18

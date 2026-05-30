@@ -4,10 +4,10 @@ export const uploadScopes = {
     USER_AVATAR: 1,
     FOOD_IMAGE: 2,
 } as const
-export const uploadScopeNames : Record<UploadScope, UploadScopeName> = {
+export const uploadScopeNames = {
     1: 'USER_AVATAR',
     2: 'FOOD_IMAGE',
-}
+} as const satisfies Record<UploadScope, UploadScopeName>
 export const zUploadScope = z.enum(uploadScopes);
 export const zUploadScopeName = z.object(uploadScopes).keyof()
 export type UploadScope = z.infer<typeof zUploadScope>;

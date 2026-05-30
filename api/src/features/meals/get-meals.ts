@@ -1,11 +1,11 @@
 import {z} from "zod";
 import type {Context} from "hono";
-import type {HonoType} from "../../index";
-import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination";
-import {db} from "../../data/db";
-import {meals} from "./meal-schema";
+import type {HonoType} from "../../index.js";
+import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination.js";
+import {db} from "../../data/db.js";
+import {meals} from "./meal-schema.js";
 import {and, eq, lte, gte, count, ilike} from "drizzle-orm";
-import { zMeal } from "cact-shared/zMeal";
+import { zMeal } from "cact-shared/zMeal.js";
 
 
 export const zGetMealsQuery = zPaginatedRequest.extend({

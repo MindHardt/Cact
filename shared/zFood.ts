@@ -1,5 +1,5 @@
 import z from "zod";
-import {zNutritionalFacts} from "./extras";
+import {zNutritionalFacts} from "./extras.js";
 
 export const zUnit = z.object({
     name: z.string().nonempty(),

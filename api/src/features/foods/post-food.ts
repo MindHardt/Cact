@@ -1,10 +1,10 @@
-import {foods} from "./food-schema";
-import {type Food, zFood} from "cact-shared/zFood";
+import {foods} from "./food-schema.js";
+import {zFood} from "cact-shared/zFood.js";
 import {z} from "zod";
 import type {Context} from "hono";
-import type {HonoType} from "../../index";
-import {db} from "../../data/db";
-import {uploads} from "../uploads/upload-schema";
+import type {HonoType} from "../../index.js";
+import {db} from "../../data/db.js";
+import {uploads} from "../uploads/upload-schema.js";
 import {eq} from "drizzle-orm";
 
 export const zPostFoodJson = zFood.pick({

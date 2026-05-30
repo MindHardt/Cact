@@ -1,12 +1,12 @@
 import {z} from "zod";
 import type {Context} from "hono";
-import type {HonoType} from "../../index";
-import {db} from "../../data/db";
-import {uploads} from "./upload-schema";
+import type {HonoType} from "../../index.js";
+import {db} from "../../data/db.js";
+import {uploads} from "./upload-schema.js";
 import { sql } from "drizzle-orm";
-import {s3, s3Bucket, s3Key} from "./s3";
+import {s3, s3Bucket, s3Key} from "./s3.js";
 import {DeleteObjectCommand} from "@aws-sdk/client-s3";
-import {zUpload} from "cact-shared/zUpload";
+import {zUpload} from "cact-shared/zUpload.js";
 
 
 export const zDeleteUploadParams = zUpload.pick({

@@ -1,10 +1,10 @@
 import {index, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { uuidv7 } from "uuidv7";
-import { users } from "../../data/schemas/auth-schema";
+import { users } from "../../data/schemas/auth-schema.js";
 import {sql, type SQL } from "drizzle-orm";
-import { type NutritionalFacts } from "cact-shared/extras";
-import {uploads} from "../uploads/upload-schema";
-import type {FoodUnit} from "cact-shared/zFood";
+import { type NutritionalFacts } from "cact-shared/extras.js";
+import {uploads} from "../uploads/upload-schema.js";
+import type {FoodUnit} from "cact-shared/zFood.js";
 
 
 export const foods = pgTable('foods', {

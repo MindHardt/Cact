@@ -1,15 +1,16 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import { auth } from "./auth/index";
-import {authMiddleware, type UserContext} from "./infra/auth-middleware";
+import { auth } from "./auth/index.js";
+import {authMiddleware, type UserContext} from "./auth/auth-middleware.js";
 import {z} from "zod";
 import { cors } from "hono/cors";
-import {foodsRouter} from "./features/foods/foods-router";
-import {uploadsRouter} from "./features/uploads/uploads-router";
+import {foodsRouter} from "./features/foods/foods-router.js";
+import {uploadsRouter} from "./features/uploads/uploads-router.js";
 import {Scalar} from "@scalar/hono-api-reference";
 import {openAPIRouteHandler} from "hono-openapi";
-import {autoMigrate} from "./data/db";
-import {mealsRouter} from "./features/meals/meals-router";
+import {autoMigrate} from "./data/db.js";
+import {mealsRouter} from "./features/meals/meals-router.js";
+import {aiPromptsRouter} from "./features/ai-prompts/ai-prompts-router.js";
 
 const config = z.object({
   PORT: z.coerce.number().int().default(3001),
@@ -55,16 +56,16 @@ api.get(
 api.get('/scalar', Scalar({ url: '/api/openapi' }))
 
 export const final = api
+    .get('/healthz', c => Promise.resolve(c.status(200)))
     .route('/foods', foodsRouter)
     .route('/uploads', uploadsRouter)
-    .route('/meals', mealsRouter);
+    .route('/meals', mealsRouter)
+    .route('/ai-prompts', aiPromptsRouter);
 export type ApiType = typeof final;
 
-await autoMigrate();
-
-serve({
+autoMigrate().then(() => serve({
   fetch: final.fetch,
   port: config.PORT
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
-})
+}));

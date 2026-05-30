@@ -1,9 +1,9 @@
-import { zMeal } from "cact-shared/zMeal";
+import { zMeal } from "cact-shared/zMeal.js";
 import {z} from "zod";
 import type {Context} from "hono";
-import type {HonoType} from "../../index";
-import {db} from "../../data/db";
-import {meals} from "./meal-schema";
+import type {HonoType} from "../../index.js";
+import {db} from "../../data/db.js";
+import {meals} from "./meal-schema.js";
 import {and, eq} from "drizzle-orm";
 
 

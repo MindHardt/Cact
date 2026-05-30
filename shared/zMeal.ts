@@ -1,6 +1,6 @@
 import {z} from "zod";
-import {zFood, zUnit} from "./zFood";
-import {zNutritionalFacts} from "./extras";
+import {zFood, zUnit} from "./zFood.js";
+import {zNutritionalFacts} from "./extras.js";
 
 export const zFoodPortion = z.object({
     food: zFood,

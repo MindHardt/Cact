@@ -1,6 +1,9 @@
 node_modules
 .docker-volumes
 
+# Typescript
+*.tsbuildinfo
+
 # Webstorm
 .idea/workspace.xml
 .idea/tasks.xml

@@ -1,9 +1,9 @@
-import { zMeal } from "cact-shared/zMeal";
+import { zMeal } from "cact-shared/zMeal.js";
 import type {Context} from "hono";
-import type {HonoType} from "../../index";
+import type {HonoType} from "../../index.js";
 import {z} from "zod";
-import {db} from "../../data/db";
-import {meals} from "./meal-schema";
+import {db} from "../../data/db.js";
+import {meals} from "./meal-schema.js";
 
 export const zPostMealJson = zMeal.pick({
     mealTime: true,

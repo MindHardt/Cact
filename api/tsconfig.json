@@ -1,19 +1,26 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "strict": true,
+    "module": "NodeNext",
     "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
+    "composite": true,
     "types": [
       "node"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "outDir": "./dist",
-    "paths": {
-      "@data": ["./src/data"]
-    }
+    "rootDir": "src",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
   },
+  "references": [
+    { "path": "../shared" }
+  ],
+  "include": ["src", ".drizzle"],
   "exclude": ["node_modules"]
 }

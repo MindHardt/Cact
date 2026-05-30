@@ -1,5 +1,5 @@
 import {type Context, type Next} from "hono";
-import type {HonoType} from "../index";
+import type {HonoType} from "../index.js";
 
 
 export const requireAuthenticatedUser = (c: Context<HonoType>, next: Next) => {

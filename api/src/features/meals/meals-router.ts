@@ -1,12 +1,12 @@
 import {Hono} from "hono";
-import type {HonoType} from "../../index";
-import {requireAuthenticatedUser} from "../../auth/require-authenticated-user";
+import type {HonoType} from "../../index.js";
+import {requireAuthenticatedUser} from "../../auth/require-authenticated-user.js";
 import {validator} from "hono-openapi";
-import {getMealsHandler, zGetMealsQuery} from "./get-meals";
-import {postMealHandler, zPostMealJson} from "./post-meal";
-import {getMealHandler, zGetMealParams} from "./get-meal";
-import {patchMealHandler, zPatchMealJson, zPatchMealParams} from "./patch-meal";
-import {deleteMealHandler, zDeleteMealParams} from "./delete-meal";
+import {getMealsHandler, zGetMealsQuery} from "./get-meals.js";
+import {postMealHandler, zPostMealJson} from "./post-meal.js";
+import {getMealHandler, zGetMealParams} from "./get-meal.js";
+import {patchMealHandler, zPatchMealJson, zPatchMealParams} from "./patch-meal.js";
+import {deleteMealHandler, zDeleteMealParams} from "./delete-meal.js";
 
 
 export const mealsRouter = new Hono<HonoType>()

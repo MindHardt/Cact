@@ -1,7 +1,7 @@
 import {pgTable, text, timestamp, uuid, smallint, bigint} from "drizzle-orm/pg-core";
 import {uuidv7} from "uuidv7";
-import {users} from "../../data/schemas/auth-schema";
-import type {UploadScope} from "cact-shared/zUpload";
+import {users} from "../../data/schemas/auth-schema.js";
+import type {UploadScope} from "cact-shared/zUpload.js";
 
 
 export const uploads = pgTable('uploads', {

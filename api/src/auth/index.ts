@@ -1,6 +1,6 @@
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import {betterAuth} from "better-auth";
-import {db} from "../data/db";
+import {db} from "../data/db.js";
 import {openAPI} from "better-auth/plugins";
 import {uuidv7} from "uuidv7";
 import {z} from "zod";
