@@ -37,7 +37,7 @@ function RootComponent() {
 
     return (
         <QueryClientProvider client={qc.current}>
-            <Surface variant='secondary' className='h-dvh flex flex-col'>
+            <Surface variant='secondary' className='min-h-dvh flex flex-col'>
                 <AuthHeader />
                 <main className='w-full max-w-4xl mx-auto p-5 grow'>
                     <Outlet />

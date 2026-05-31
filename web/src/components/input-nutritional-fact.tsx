@@ -8,7 +8,8 @@ const factLetters: Record<NutritionalFactName, string> = {
     carbs: 'У'
 }
 
-export default function InputNutritionalFact({ field, withLetter } : {
+export default function InputNutritionalFact({ readonly, field, withLetter } : {
+    readonly?: boolean,
     withLetter?: boolean,
     field: {
         name: NutritionalFactName,
@@ -23,6 +24,7 @@ export default function InputNutritionalFact({ field, withLetter } : {
             {withLetter && <span className='font-semibold text-lg'>{factLetters[field.name]}</span>}
         </InputGroup.Prefix>
         <InputGroup.Input
+            readOnly={readonly}
             name={field.name}
             type='number'
             min='0'

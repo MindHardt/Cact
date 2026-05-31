@@ -1,14 +1,14 @@
-import {createFileRoute, useNavigate, useRouterState} from '@tanstack/react-router'
+import {createFileRoute, Link, useNavigate, useRouterState} from '@tanstack/react-router'
 import {z} from "zod";
 import FoodCard from "#/components/food-card.tsx";
 import NothingFound from "#/components/nothing-found.tsx";
 import {useDebouncer} from "@tanstack/react-pacer";
 import {Button, InputGroup} from "@heroui/react";
-import NewFoodForm from "#/routes/foods/-form/new-food-form.tsx";
-import {LoaderCircle, Search} from "lucide-react";
+import {LoaderCircle, Lock, Plus, Search} from "lucide-react";
 import {api} from "#/api.ts";
 import {pagination, zPaginatedResponse} from "cact-shared/pagination.js";
 import {zFood} from "cact-shared/zFood.js";
+import { RootRoute } from '../__root';
 
 const zSearch = z.object({
     page: z.number().positive().optional(),
@@ -31,6 +31,7 @@ export const Route = createFileRoute('/foods/')({
 function RouteComponent() {
 
     const navigate = useNavigate({ from: '/foods/' });
+    const { user } = RootRoute.useRouteContext();
     const { foods } = Route.useLoaderData();
     const { q } = Route.useSearch();
     const routerState = useRouterState();
@@ -56,7 +57,17 @@ function RouteComponent() {
                 <Button size='sm' variant='secondary' onClick={() => setQ.flush()}>
                     {routerState.isLoading ? <LoaderCircle className='size-4 animate-spin' /> : <Search className='size-4' />}
                 </Button>
-                <NewFoodForm onCreated={() => navigate({ to: '.' })} />
+                {user ? (
+                    <Link to='/foods/new'>
+                        <Button size='sm'>
+                            <Plus />
+                        </Button>
+                    </Link>
+                ) : (
+                    <Button size='sm' isDisabled>
+                        <Lock />
+                    </Button>
+                )}
             </InputGroup.Suffix>
         </InputGroup>
         {SearchResult}
