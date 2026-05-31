@@ -1,14 +1,15 @@
 import {RootRoute} from "#/routes/__root.tsx";
 import {Avatar, Button, Dropdown, Header, Label, Separator} from "@heroui/react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {Lock} from "lucide-react";
+import {DoorClosed, Lock, Target, UserPen} from "lucide-react";
 import Logo from "#/components/logo.tsx";
 import {auth, type User} from "#/api.ts";
+import { avatarFallback, avatarSrc } from "#/routes/users/-avatar-fns";
 
 
 export default function AuthHeader() {
 
-    const { auth: { user }} = RootRoute.useRouteContext();
+    const { user } = RootRoute.useRouteContext();
 
     const Controls = user
         ? <UserControls user={user} />
@@ -24,12 +25,6 @@ export default function AuthHeader() {
 
 function UserControls({ user } : { user: User }) {
 
-    function avatarFallback(user: User) {
-        return user.name
-            .split(' ', 2)
-            .map(x => x[0]?.toUpperCase() ?? '')
-            .join('');
-    }
     const navigate = useNavigate();
     const logout = async () => {
         await auth.signOut();
@@ -39,7 +34,7 @@ function UserControls({ user } : { user: User }) {
     return <Dropdown>
         <Dropdown.Trigger className='flex flex-row gap-1 items-center justify-center'>
             <Avatar>
-                <Avatar.Image alt={user.name} src={user.image ?? undefined} />
+                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
         </Dropdown.Trigger>
@@ -52,11 +47,26 @@ function UserControls({ user } : { user: User }) {
                 <Dropdown.Section>
                     <Dropdown.Item>
                         <Link to='/users/me'>
-                            <Label>Профиль</Label>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <UserPen />
+                                Профиль
+                            </Label>
                         </Link>
                     </Dropdown.Item>
+                    <Dropdown.Item>
+                        <Link to='/targets'>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <Target />
+                                Цели
+                            </Label>
+                        </Link>
+                    </Dropdown.Item>
+                    <Separator className='my-2' />
                     <Dropdown.Item id='logout' textValue="Выйти" variant="danger">
-                        <Label>Выйти</Label>
+                        <Label className='flex flex-row gap-1 items-center justify-between w-full'>
+                            <span className='me-auto'>Выйти</span>
+                            <DoorClosed />
+                        </Label>
                     </Dropdown.Item>
                 </Dropdown.Section>
             </Dropdown.Menu>

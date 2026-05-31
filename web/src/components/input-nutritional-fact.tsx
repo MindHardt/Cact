@@ -12,8 +12,8 @@ export default function InputNutritionalFact({ field, withLetter } : {
     withLetter?: boolean,
     field: {
         name: NutritionalFactName,
-        state: { value: number },
-        handleChange: (value: number) => void
+        state: { value: number | null },
+        handleChange: (value: number | null) => void
     }
 }) {
 
@@ -27,8 +27,8 @@ export default function InputNutritionalFact({ field, withLetter } : {
             type='number'
             min='0'
             step='0.1'
-            value={field.state.value}
-            onChange={e => field.handleChange(parseFloat(e.target.value) || 0)}
+            value={field.state.value ?? ''}
+            onChange={e => field.handleChange(parseFloat(e.target.value) || null)}
         />
     </InputGroup>
 

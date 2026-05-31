@@ -19,3 +19,6 @@ node_modules
 .idea/dataSources/
 .idea/plugins/
 .idea/[pP]lugin[ss]*/
+
+# VSCode
+.vscode/

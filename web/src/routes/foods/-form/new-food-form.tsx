@@ -1,30 +1,36 @@
 import {z} from "zod";
 import {useForm} from "@tanstack/react-form";
-import {pb} from "#/pb.ts";
-import {Button, Input, InputGroup, Modal, Spinner, Surface} from "@heroui/react";
-import {Copy, Lock, Plus} from "lucide-react";
+import {Button, Input, Modal, Spinner, Surface, TextArea} from "@heroui/react";
+import {Lock, Plus} from "lucide-react";
 import {useState} from "react";
 import InputFoodImage from "./input-food-image.tsx";
-import {RootRoute} from "#/routes/__root.tsx";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
+import { api, uploadUrl } from "#/api.ts";
+import { zFood } from "cact-shared/zFood.js";
+import { RootRoute } from "#/routes/__root.tsx";
+import { zUpload } from "cact-shared/zUpload.js";
 
-const zValidator = z.object({
-    name: z.string().nonempty(),
-    calories: z.number().nonnegative(),
-    protein: z.number().nonnegative(),
-    fats: z.number().nonnegative(),
-    carbs: z.number().nonnegative(),
-    unit: z.string().nonempty(),
-    comment: z.string().optional(),
-    image: z.file().optional()
-});
+const zValidator = zFood.pick({
+    name: true,
+    description: true,
+    facts: true,
+    units: true
+}).extend({
+    image: z.file().nullable()
+})
 const defaultValues : z.infer<typeof zValidator> = {
     name: "",
-    calories: 0,
-    protein: 0,
-    fats: 0,
-    carbs: 0,
-    unit: ""
+    description: null,
+    facts: {
+        protein: 0,
+        fats: 0,
+        carbs: 0
+    },
+    units: [{
+        name: '100 грамм',
+        multiplier: 1
+    }],
+    image: null
 }
 
 export default function NewFoodForm({ onCreated } : {
@@ -41,10 +47,17 @@ export default function NewFoodForm({ onCreated } : {
         },
         defaultValues,
         onSubmit: async ({ value }) => {
-            await pb.collection('foods').create({
+            const imageId = value.image
+                ? await api.uploads.$post({ form: { scope: 'FOOD_IMAGE', file: value.image }})
+                    .then(x => x.json())
+                    .then(x => zUpload.parse(x))
+                    .then(x => uploadUrl(x))
+                : null
+
+            await api.foods.$post({ json: {
                 ...value,
-                author: user!.id
-            });
+                imageId
+            }})
             setOpen(false);
             form.reset();
             onCreated && await onCreated();
@@ -81,50 +94,44 @@ export default function NewFoodForm({ onCreated } : {
                                     />
                                 )}
                             </form.Field>
+                            <form.Field name='description'>
+                                {field => (
+                                    <TextArea 
+                                        placeholder='Примечания'
+                                        value={field.state.value ?? ''}
+                                        onChange={e => field.handleChange(e.target.value.length > 0 ? e.target.value : null)}
+                                    />
+                                )}
+                            </form.Field>
                             <Surface className='flex flex-col gap-1'>
-                                <form.Field name='calories'>
+                                <form.Field name='facts.protein'>
                                     {field => (
-                                        <InputNutritionalFact withLetter field={field} />
+                                        <InputNutritionalFact withLetter field={{
+                                            name: 'protein',
+                                            state: field.state,
+                                            handleChange: x => field.handleChange(x ?? 0)
+                                        }} />
                                     )}
                                 </form.Field>
-                                <form.Field name='protein'>
+                                <form.Field name='facts.fats'>
                                     {field => (
-                                        <InputNutritionalFact withLetter field={field} />
+                                        <InputNutritionalFact withLetter field={{
+                                            name: 'fats',
+                                            state: field.state,
+                                            handleChange: x => field.handleChange(x ?? 0)
+                                        }} />
                                     )}
                                 </form.Field>
-                                <form.Field name='fats'>
+                                <form.Field name='facts.carbs'>
                                     {field => (
-                                        <InputNutritionalFact withLetter field={field} />
-                                    )}
-                                </form.Field>
-                                <form.Field name='carbs'>
-                                    {field => (
-                                        <InputNutritionalFact withLetter field={field} />
+                                        <InputNutritionalFact withLetter field={{
+                                            name: 'carbs',
+                                            state: field.state,
+                                            handleChange: x => field.handleChange(x ?? 0)
+                                        }} />
                                     )}
                                 </form.Field>
                             </Surface>
-                            <form.Field name='unit'>
-                                {field => (
-                                    <InputGroup>
-                                        <InputGroup.Input
-                                            placeholder='Единица измерения'
-                                            value={field.state.value}
-                                            onChange={e => field.handleChange(e.target.value)}
-                                        />
-                                        {field.state.value.length == 0 && (
-                                            <InputGroup.Suffix>
-                                                <Button
-                                                    size='sm'
-                                                    variant='secondary'
-                                                    onClick={() => field.handleChange('100 г')}>
-                                                    <Copy />
-                                                    100 г
-                                                </Button>
-                                            </InputGroup.Suffix>
-                                        )}
-                                    </InputGroup>
-                                )}
-                            </form.Field>
                             <form.Field name='image'>
                                 {field => (
                                     <InputFoodImage field={field} />

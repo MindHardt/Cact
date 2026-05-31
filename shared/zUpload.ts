@@ -18,8 +18,13 @@ export const zUpload = z.object({
     id: z.uuid(),
     fileName: z.string(),
     contentType: z.string(),
-    scope: zUploadScope.transform(x => uploadScopeNames[x]).pipe(zUploadScopeName),
+    scope: z.union([
+        zUploadScope.transform(x => uploadScopeNames[x]).pipe(zUploadScopeName),
+        zUploadScopeName
+    ]),
     size: z.number(),
     uploaderId: z.uuid().nullable(),
     createdAt: zDatetime
-})
+});
+
+export type Upload = z.infer<typeof zUpload>

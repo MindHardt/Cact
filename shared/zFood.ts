@@ -3,7 +3,7 @@ import {zDatetime, zNutritionalFacts} from "./extras.js";
 
 export const zUnit = z.object({
     name: z.string().nonempty(),
-    multiplier: z.number().positive().default(1)
+    multiplier: z.number().positive()
 });
 
 export type FoodUnit = z.infer<typeof zUnit>;

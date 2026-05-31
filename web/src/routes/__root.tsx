@@ -16,11 +16,15 @@ import {auth} from "#/api.ts";
 
 export const Route = createRootRoute({
     component: RootComponent,
-    beforeLoad: async () => ({
-        auth: await auth.getSession().then(x => x.data ?? {
-            user: null, session: null
-        })
-    }),
+    beforeLoad: async () => {
+        const { data } = await auth.getSession();
+        return data ?? {
+            user: null,
+            session: null
+        }
+    },
+    staleTime: 1000 * 60,
+    preloadStaleTime: 1000 * 60,
     notFoundComponent: NotFoundComponent,
     errorComponent: ErrorComponent
 });

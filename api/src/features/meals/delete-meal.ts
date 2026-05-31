@@ -17,12 +17,12 @@ export async function deleteMealHandler({ c, params } : {
 }) {
 
     const userId = c.get('user')!.id;
-    const [affected] = await db
+    const [deleted] = await db
         .delete(meals)
         .where(and(eq(meals.id, params.id), eq(meals.userId, userId)))
-        .returning({ id: meals.id });
+        .returning();
 
-    return affected
+    return deleted
         ? c.body(null, { status: 204 })
         : c.body(null, { status: 404 });
 }

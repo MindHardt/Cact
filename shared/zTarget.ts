@@ -11,3 +11,9 @@ export const zTarget = z.object({
     fats: z.number().nonnegative().nullable(),
     carbs: z.number().nonnegative().nullable()
 });
+
+export function isActive(target: Target) {
+    return target.activeFrom < new Date();
+}
+
+export type Target = z.infer<typeof zTarget>

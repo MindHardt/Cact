@@ -32,6 +32,12 @@ export const auth = betterAuth({
             generateId: () => uuidv7(),
         }
     },
+    session: {
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60 // 5 minutes
+        }
+    },
     plugins: [
         openAPI()
     ]

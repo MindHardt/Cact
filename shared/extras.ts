@@ -1,15 +1,21 @@
 import {z} from "zod";
 
+export const zNutritionalFact = z.number().nonnegative();
 export const zNutritionalFacts = z.object({
-    protein: z.number().nonnegative(),
-    fats: z.number().nonnegative(),
-    carbs: z.number().nonnegative()
+    protein: zNutritionalFact,
+    fats: zNutritionalFact,
+    carbs: zNutritionalFact
 });
 
 export type NutritionalFacts = z.infer<typeof zNutritionalFacts>
 
-export function calculateCalories(facts: NutritionalFacts) {
-    return (facts.protein * 4) + (facts.fats * 9) + (facts.carbs * 4);
+const zNutritionalFactsNullish = z.object({
+    protein: zNutritionalFact.nullish(),
+    fats: zNutritionalFact.nullish(),
+    carbs: zNutritionalFact.nullish()
+})
+export function calculateCalories(facts: z.infer<typeof zNutritionalFactsNullish>) {
+    return ((facts.protein ?? 0) * 4) + ((facts.fats ?? 0) * 9) + ((facts.carbs ?? 0) * 4);
 };
 
 export const zDatetime =  z.union([

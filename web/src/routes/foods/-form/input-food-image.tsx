@@ -4,12 +4,12 @@ import {ImagePlus, Trash} from "lucide-react";
 
 export default function InputFoodImage({ field } : {
 
-    field: { state: { value: File | undefined }, handleChange: (value: File | undefined) => void }
+    field: { state: { value: File | null }, handleChange: (value: File | null) => void }
 }) {
 
     const input = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
-    const setFile = (file: File | undefined) => {
+    const setFile = (file: File | null) => {
         preview && URL.revokeObjectURL(preview);
         setPreview(file ? URL.createObjectURL(file) : null);
         field.handleChange(file);
@@ -33,7 +33,7 @@ export default function InputFoodImage({ field } : {
                 <Button className='w-full' onClick={() => input.current!.click()}>
                     <ImagePlus />
                 </Button>
-                <Button onClick={() => setFile(undefined)}>
+                <Button onClick={() => setFile(null)}>
                     <Trash />
                 </Button>
             </ButtonGroup>

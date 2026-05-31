@@ -1,10 +1,11 @@
-import type {zNutritionFacts} from "#/entities/nutrition-facts.ts";
+import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
 import type {ComponentProps, ReactElement} from "react";
 import {CakeSlice, Drumstick, Hamburger, Zap} from "lucide-react";
 import {Tooltip} from "@heroui/react";
+import type z from "zod";
 
-
-export type NutritionalFactName = keyof typeof zNutritionFacts.shape;
+export const nutritionalFactNames = zNutritionFacts.keyof();
+export type NutritionalFactName = z.infer<typeof nutritionalFactNames>;
 type Props = ComponentProps<'svg'>;
 const icons : Record<NutritionalFactName, (props: Props) => ReactElement> = {
     calories: props => <Zap {...props} />,

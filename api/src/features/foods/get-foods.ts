@@ -10,7 +10,7 @@ export const zListFoodsQuery = zPaginatedRequest.extend({
     search: z.string().optional()
 })
 
-export const listFoodsHandler = async ({ query, c } : {
+export const getFoodsHandler = async ({ query, c } : {
     query: z.infer<typeof zListFoodsQuery>,
     c: Context
 }) => {

@@ -23,3 +23,8 @@ export function pagination(page?: number, pageSize = 12) : z.input<typeof zPagin
         take: `${pageSize}`
     }
 }
+
+// Gets all items without pagination. Use with caution.
+export function getAll() : z.input<typeof zPaginatedRequest> {
+    return pagination(1, 65535);
+}
