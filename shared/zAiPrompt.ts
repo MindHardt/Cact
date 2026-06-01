@@ -1,5 +1,6 @@
 import {z} from "zod";
-import {zDatetime, zNutritionalFacts} from "./extras.js";
+import {zDatetime, zUserId} from "./extras.js";
+import { zNutritionalFacts } from "./zNutritionalFacts.js";
 
 export const zFoodItem = z.object({
     name: z.string(),
@@ -24,11 +25,20 @@ export const zAiPromptStatusName = z.object(aiPromptStatus).keyof();
 export type AiPromptStatus = z.infer<typeof zAiPromptStatus>;
 export type AiPromptStatusName = z.infer<typeof zAiPromptStatusName>;
 
+export const zAiPromptId = z.uuid().brand<'AiPromptId'>();
 export const zAiPrompt = z.object({
-    id: z.uuid(),
+    id: zAiPromptId,
     createdAt: zDatetime,
+    userId: zUserId,
     respondedAt: zDatetime.nullable(),
     text: z.string().nonempty(),
-    status: zAiPromptStatus.transform(x => aiPromptStatusNames[x]).pipe(zAiPromptStatusName),
+    status: z.union([
+        zAiPromptStatus.transform(x => aiPromptStatusNames[x]).pipe(zAiPromptStatusName),
+        zAiPromptStatusName
+    ]),
     items: z.array(zFoodItem).nullable()
 });
+
+export function getTotal(prompt: z.infer<typeof zAiPrompt>, fact: keyof z.infer<typeof zNutritionalFacts>) { 
+    return prompt.items?.reduce((sum, item) => sum + (item.facts?.[fact] || 0), 0) || 0;
+}

@@ -1,11 +1,12 @@
-import {type Food, zFood} from "#/entities/food.ts";
 import {useDebouncedValue} from "@tanstack/react-pacer";
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {pb} from "#/pb.ts";
 import {Button, InputGroup, Modal, Spinner} from "@heroui/react";
 import {Search, Utensils} from "lucide-react";
 import {useState} from "react";
 import FoodCard from "#/components/food-card.tsx";
+import { api } from "#/api";
+import { getAll, zPaginatedResponse } from "cact-shared/pagination.js";
+import { zFood, type Food } from "cact-shared/zFood.js";
 
 
 export default function FoodSelector({ onSelected } : {
@@ -17,13 +18,9 @@ export default function FoodSelector({ onSelected } : {
     const { data: foods } = useQuery({
         placeholderData: keepPreviousData,
         queryKey: ['meals', search],
-        queryFn: async () => await pb
-            .collection('foods')
-            .getFullList({
-                filter: search.length > 0 ? `tags ~ "${search.toLowerCase()}"` : undefined,
-                sort: '+name'
-            })
-            .then(x => x.map(food => zFood.parse(food)))
+        queryFn: async () => await api.foods.$get({ query: { search, ...getAll() } })
+            .then(x => x.json())
+            .then(x => zPaginatedResponse(zFood).parse(x))
     });
     const onClick = (food: Food) => {
         setOpen(false);
@@ -57,7 +54,7 @@ export default function FoodSelector({ onSelected } : {
                                 </InputGroup.Suffix>
                             </InputGroup>
                             <div className='grid grid-cols-2 md:grid-cols-3 gap-2 max-h-120 overflow-y-auto p-2'>
-                                {foods ? foods.map(food => (
+                                {foods ? foods.data.map(food => (
                                     <a onClick={() => onClick(food)}>
                                         <FoodCard food={food} />
                                     </a>

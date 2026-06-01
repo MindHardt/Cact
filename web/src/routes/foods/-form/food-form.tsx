@@ -3,10 +3,10 @@ import { useForm } from "@tanstack/react-form";
 import { Button, ButtonGroup, Input, Spinner, Surface, TextArea } from "@heroui/react";
 import InputFoodImage from "./input-food-image.tsx";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
-import { api, uploadUrl } from "#/api.ts";
+import { api } from "#/api.ts";
 import { zFood, type Food } from "cact-shared/zFood.js";
 import { zUpload } from "cact-shared/zUpload.js";
-import { deepEqual, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
 
 const zValidator = zFood.pick({
@@ -61,8 +61,8 @@ export default function FoodForm({ food, readonly }: {
 
             const json = { ...value, imageId };
             const { id } = await (food 
-                ? api.foods.$post({ json }) 
-                : api.foods[':id'].$patch({ param: { id: food!.id }, json })
+                ? api.foods[':id'].$patch({ param: { id: food.id }, json })
+                : api.foods.$post({ json }) 
             ).then(x => x.json()).then(x => zFood.parse(x))
             form.reset();
             await navigate({ to: '/foods/$id', params: { id } })

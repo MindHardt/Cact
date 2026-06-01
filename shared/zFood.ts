@@ -1,5 +1,7 @@
 import z from "zod";
-import {zDatetime, zNutritionalFacts} from "./extras.js";
+import {zDatetime, zUserId} from "./extras.js";
+import { zUploadId } from "./zUpload.js";
+import { zNutritionalFacts } from "./zNutritionalFacts.js";
 
 export const zUnit = z.object({
     name: z.string().nonempty(),
@@ -8,13 +10,14 @@ export const zUnit = z.object({
 
 export type FoodUnit = z.infer<typeof zUnit>;
 
+export const zFoodId = z.uuid().brand<'FoodId'>();
 export const zFood = z.object({
-    id: z.uuid(),
+    id: zFoodId,
     name: z.string(),
     description: z.string().nullable(),
     facts: zNutritionalFacts,
-    authorId: z.uuid().nullable(),
-    imageId: z.uuid().nullable(),
+    authorId: zUserId.nullable(),
+    imageId: zUploadId.nullable(),
     units: z.array(zUnit).nonempty(),
     createdAt: zDatetime,
     updatedAt: zDatetime

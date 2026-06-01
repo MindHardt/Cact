@@ -1,9 +1,10 @@
 import {z} from "zod";
-import {zDatetime} from "./extras.js";
+import {zDatetime, zUserId} from "./extras.js";
 
+export const zTargetId = z.uuid().brand<'TargetId'>();
 export const zTarget = z.object({
-    id: z.uuid(),
-    userId: z.uuid(),
+    id: zTargetId,
+    userId: zUserId,
     activeFrom: zDatetime,
     name: z.string().nullable(),
     calories: z.number().nonnegative().nullable(),

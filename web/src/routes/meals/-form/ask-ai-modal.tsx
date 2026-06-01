@@ -3,30 +3,15 @@ import {useState} from "react";
 import {Button, Modal, Spinner, TextArea} from "@heroui/react";
 import {WandSparkles} from "lucide-react";
 import {useForm} from "@tanstack/react-form";
-import {pb} from "#/pb.ts";
+import { api } from "#/api";
+import { zAiPrompt } from "cact-shared/zAiPrompt.js";
 
-const zResponse = z.object({
-    response: z.object({
-        output: z.array(z.object({
-            content: z.array(z.object({
-                text: z.string()
-            }))
-        }))
-    })
-});
-const zAiResult = z.object({
-    calories: z.number().nullable(),
-    protein: z.number().nullable(),
-    fats: z.number().nullable(),
-    carbs: z.number().nullable(),
-    comment: z.string().nonempty()
-});
 const zValidator = z.object({
     prompt: z.string().nonempty()
 })
 
 export default function AskAiModal({ onResponseReceived } : {
-    onResponseReceived?: (response: z.infer<typeof zAiResult>) => void
+    onResponseReceived?: (response: z.infer<typeof zAiPrompt>) => void
 }) {
 
     const [open, setOpen] = useState(false);
@@ -39,12 +24,11 @@ export default function AskAiModal({ onResponseReceived } : {
             onChange: zValidator
         },
         onSubmit: async ({ value: { prompt }}) => {
-            const res = await pb.send('/api/ask-ai', {
-                method: 'POST',
-                body: { prompt }
-            }).then(x => zResponse.parse(x));
-            const result = zAiResult.parse((JSON.parse(res.response.output[0].content[0].text)));
-            onResponseReceived && onResponseReceived(result);
+            const res = await api["ai-prompts"].$post({ json: { text: prompt } })
+                .then(x => x.json())
+                .then(x => zAiPrompt.parse(x));
+                
+            onResponseReceived && onResponseReceived(res);
             setOpen(false);
         }
     })

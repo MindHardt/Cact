@@ -5,7 +5,7 @@ import BackButton from "#/components/back-button.tsx";
 import { api } from '#/api';
 import { getAll, zPaginatedResponse } from 'cact-shared/pagination.js';
 import { isActive, zTarget } from 'cact-shared/zTarget.js';
-import { calculateCalories } from 'cact-shared/extras.js';
+import { calculateCalories } from 'cact-shared/zNutritionalFacts.js';
 
 export const Route = createFileRoute('/targets/')({
     beforeLoad: ({ context: { user }}) => {

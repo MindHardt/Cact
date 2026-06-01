@@ -1,7 +1,7 @@
 import {Link} from "@tanstack/react-router";
 import {Card} from "@heroui/react";
 import {uploadUrl} from "#/api";
-import type {Food} from "cact-shared/zFood";
+import type {Food} from "cact-shared/zFood.js";
 
 export default function FoodCard({ food, withLink } : {
     withLink?: boolean,

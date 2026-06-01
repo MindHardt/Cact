@@ -16,7 +16,7 @@ import { Route as FoodsIndexRouteImport } from './routes/foods/index'
 import { Route as UsersMeRouteImport } from './routes/users/me'
 import { Route as TargetsNewRouteImport } from './routes/targets/new'
 import { Route as TargetsIdRouteImport } from './routes/targets/$id'
-import { Route as MealsAddRouteImport } from './routes/meals/add'
+import { Route as MealsNewRouteImport } from './routes/meals/new'
 import { Route as MealsIdRouteImport } from './routes/meals/$id'
 import { Route as FoodsNewRouteImport } from './routes/foods/new'
 import { Route as FoodsIdRouteImport } from './routes/foods/$id'
@@ -56,9 +56,9 @@ const TargetsIdRoute = TargetsIdRouteImport.update({
   path: '/targets/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MealsAddRoute = MealsAddRouteImport.update({
-  id: '/meals/add',
-  path: '/meals/add',
+const MealsNewRoute = MealsNewRouteImport.update({
+  id: '/meals/new',
+  path: '/meals/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MealsIdRoute = MealsIdRouteImport.update({
@@ -82,7 +82,7 @@ export interface FileRoutesByFullPath {
   '/foods/$id': typeof FoodsIdRoute
   '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -95,7 +95,7 @@ export interface FileRoutesByTo {
   '/foods/$id': typeof FoodsIdRoute
   '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -109,7 +109,7 @@ export interface FileRoutesById {
   '/foods/$id': typeof FoodsIdRoute
   '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -124,7 +124,7 @@ export interface FileRouteTypes {
     | '/foods/$id'
     | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -137,7 +137,7 @@ export interface FileRouteTypes {
     | '/foods/$id'
     | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -150,7 +150,7 @@ export interface FileRouteTypes {
     | '/foods/$id'
     | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -164,7 +164,7 @@ export interface RootRouteChildren {
   FoodsIdRoute: typeof FoodsIdRoute
   FoodsNewRoute: typeof FoodsNewRoute
   MealsIdRoute: typeof MealsIdRoute
-  MealsAddRoute: typeof MealsAddRoute
+  MealsNewRoute: typeof MealsNewRoute
   TargetsIdRoute: typeof TargetsIdRoute
   TargetsNewRoute: typeof TargetsNewRoute
   UsersMeRoute: typeof UsersMeRoute
@@ -224,11 +224,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TargetsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/meals/add': {
-      id: '/meals/add'
-      path: '/meals/add'
-      fullPath: '/meals/add'
-      preLoaderRoute: typeof MealsAddRouteImport
+    '/meals/new': {
+      id: '/meals/new'
+      path: '/meals/new'
+      fullPath: '/meals/new'
+      preLoaderRoute: typeof MealsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/meals/$id': {
@@ -260,7 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   FoodsIdRoute: FoodsIdRoute,
   FoodsNewRoute: FoodsNewRoute,
   MealsIdRoute: MealsIdRoute,
-  MealsAddRoute: MealsAddRoute,
+  MealsNewRoute: MealsNewRoute,
   TargetsIdRoute: TargetsIdRoute,
   TargetsNewRoute: TargetsNewRoute,
   UsersMeRoute: UsersMeRoute,

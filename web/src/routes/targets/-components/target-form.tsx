@@ -1,17 +1,15 @@
 import {useForm} from "@tanstack/react-form";
 import {z} from "zod";
-import {useNavigate} from "@tanstack/react-router";
-import {pb} from "#/pb.ts";
+import {useNavigate, useRouter} from "@tanstack/react-router";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
 import {Button, ButtonGroup, Input, Spinner} from "@heroui/react";
 import {addMinutes, format} from "date-fns";
 import BackButton from "#/components/back-button.tsx";
 import {Calculator, Trash} from "lucide-react";
-import {RootRoute} from "#/routes/__root.tsx";
 import DaySelector from "#/components/day-selector.tsx";
-import { calculateCalories, zNutritionalFact, zNutritionalFacts } from "cact-shared/extras.js";
 import type { Target } from "cact-shared/zTarget.js";
 import { api } from "#/api";
+import { calculateCalories, zNutritionalFact } from "cact-shared/zNutritionalFacts.js";
 
 const zValidator = z.object({
     id: z.string().optional(),
@@ -27,7 +25,7 @@ export default function TargetForm({ target } : {
     target?: Target
 }) {
 
-    const navigate = useNavigate();
+    const router = useRouter();
     const form = useForm({
         defaultValues: zValidator.optional().parse(target) ?? {
             id: undefined,
@@ -44,16 +42,17 @@ export default function TargetForm({ target } : {
         },
         onSubmit: async ({ value: { id, ...body } }) => {
             if (id) {
-                await api.targets[':id'].$patch({ param: { id }, json: body })
+                await api.targets[':id'].$patch({ param: { id }, json: body });
+                router.history.back();
             } else {
-                await api.targets.$post({ json: body })
+                await api.targets.$post({ json: body });
+                await router.navigate({ to: '/targets' });
             }
-            await navigate({ to: '/targets' });
         }
     })
     const onDelete = async () => {
         await api.targets[':id'].$delete({ param: { id: target!.id }});
-        await navigate({ to: '/targets' });
+        await router.history.back();
     }
 
     return (

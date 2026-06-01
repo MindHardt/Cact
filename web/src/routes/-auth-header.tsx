@@ -1,7 +1,7 @@
 import {RootRoute} from "#/routes/__root.tsx";
 import {Avatar, Button, Dropdown, Header, Label, Separator} from "@heroui/react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {DoorClosed, Lock, Target, UserPen} from "lucide-react";
+import {DoorClosed, Lock, NotebookPen, Target, UserPen} from "lucide-react";
 import Logo from "#/components/logo.tsx";
 import {auth, type User} from "#/api.ts";
 import { avatarFallback, avatarSrc } from "#/routes/users/-avatar-fns";
@@ -58,6 +58,14 @@ function UserControls({ user } : { user: User }) {
                             <Label className='flex flex-row gap-1 items-center'>
                                 <Target />
                                 Цели
+                            </Label>
+                        </Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                        <Link to='/meals'>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <NotebookPen />
+                                Дневник
                             </Label>
                         </Link>
                     </Dropdown.Item>

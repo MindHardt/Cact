@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {zDatetime} from "./extras.js";
+import {zDatetime, zUserId} from "./extras.js";
 
 export const uploadScopes = {
     USER_AVATAR: 1,
@@ -14,8 +14,9 @@ export const zUploadScopeName = z.object(uploadScopes).keyof()
 export type UploadScope = z.infer<typeof zUploadScope>;
 export type UploadScopeName = z.infer<typeof zUploadScopeName>
 
+export const zUploadId = z.uuid().brand<'UploadId'>();
 export const zUpload = z.object({
-    id: z.uuid(),
+    id: zUploadId,
     fileName: z.string(),
     contentType: z.string(),
     scope: z.union([
@@ -23,7 +24,7 @@ export const zUpload = z.object({
         zUploadScopeName
     ]),
     size: z.number(),
-    uploaderId: z.uuid().nullable(),
+    uploaderId: zUserId.nullable(),
     createdAt: zDatetime
 });
 
