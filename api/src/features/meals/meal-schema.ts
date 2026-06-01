@@ -1,8 +1,8 @@
 import {index, jsonb, pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
 import {uuidv7} from "uuidv7";
 import {type FoodPortion} from "cact-shared/zMeal.js";
-import type {NutritionalFacts} from "cact-shared/extras.js";
 import {users} from "../../data/schemas/auth-schema.js";
+import type { NutritionalFacts } from "cact-shared/zNutritionalFacts.js";
 
 export const meals = pgTable('meals', {
     id: uuid('id').primaryKey().$default(() => uuidv7()),

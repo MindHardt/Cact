@@ -16,7 +16,7 @@ import { api } from "#/api";
 import { getAll, zPaginatedResponse } from "cact-shared/pagination.js";
 import { zMeal } from "cact-shared/zMeal.js";
 import { zTarget, type Target } from "cact-shared/zTarget.js";
-import type { NutritionalAndEnergyFacts, NutritionalFacts } from "cact-shared/zNutritionalFacts.js";
+import type { NutritionalAndEnergyFacts } from "cact-shared/zNutritionalFacts.js";
 
 const zSearch = z.object({
     day: z.iso.date().optional().catch(undefined)
