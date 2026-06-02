@@ -1,5 +1,6 @@
 import NutritionalFactIcon, {type NutritionalFactName} from "#/components/nutritional-fact-icon.tsx";
 import {InputGroup} from "@heroui/react";
+import type { ReactNode } from "react";
 
 const factLetters: Record<NutritionalFactName, string> = {
     calories: 'К',
@@ -8,7 +9,8 @@ const factLetters: Record<NutritionalFactName, string> = {
     carbs: 'У'
 }
 
-export default function InputNutritionalFact({ readonly, field, withLetter } : {
+export default function InputNutritionalFact({ readonly, field, withLetter, children } : {
+    children?: ReactNode,
     readonly?: boolean,
     withLetter?: boolean,
     field: {
@@ -32,6 +34,7 @@ export default function InputNutritionalFact({ readonly, field, withLetter } : {
             value={field.state.value ?? ''}
             onChange={e => field.handleChange(parseFloat(e.target.value) || null)}
         />
+        {children}
     </InputGroup>
 
 }

@@ -12,7 +12,7 @@ import {
     Surface,
     TextArea
 } from "@heroui/react";
-import { Clock, Trash, TriangleAlert } from "lucide-react";
+import { Calculator, Clock, Trash, TriangleAlert } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 import { addMinutes } from "date-fns";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
@@ -21,6 +21,7 @@ import AskAiModal from "#/routes/meals/-form/ask-ai-modal";
 import { api } from "#/api";
 import { zMeal, type Meal } from "cact-shared/zMeal.js";
 import { getTotal } from "cact-shared/zAiPrompt.js";
+import { calculateCalories } from "cact-shared/zNutritionalFacts.js";
 
 const zValidator = zMeal.pick({
     nutrition: true,
@@ -153,16 +154,23 @@ export default function MealForm({ meal }: {
             <CardContent>
                 <div className='grid grid-cols-2 gap-2'>
                     <form.Field name='nutrition.calories'>
-                        {field => <InputNutritionalFact withLetter 
-                            field={{
-                                name: 'calories',
-                                state: field.state,
-                                handleChange: x => field.handleChange(x ?? 0)
-                            }}
-                        />}
+                        {field => (
+                            <InputNutritionalFact withLetter
+                                field={{
+                                    name: 'calories',
+                                    state: field.state,
+                                    handleChange: x => field.handleChange(x ?? 0)
+                                }}>
+                                <InputGroup.Suffix>
+                                    <Button size='sm' variant='secondary' onClick={() => field.handleChange(calculateCalories(field.form.state.values.nutrition))}>
+                                        <Calculator />
+                                    </Button>
+                                </InputGroup.Suffix>
+                            </InputNutritionalFact>
+                        )}
                     </form.Field>
                     <form.Field name='nutrition.protein'>
-                        {field => <InputNutritionalFact withLetter 
+                        {field => <InputNutritionalFact withLetter
                             field={{
                                 name: 'protein',
                                 state: field.state,
@@ -171,7 +179,7 @@ export default function MealForm({ meal }: {
                         />}
                     </form.Field>
                     <form.Field name='nutrition.fats'>
-                        {field => <InputNutritionalFact withLetter 
+                        {field => <InputNutritionalFact withLetter
                             field={{
                                 name: 'fats',
                                 state: field.state,
@@ -180,7 +188,7 @@ export default function MealForm({ meal }: {
                         />}
                     </form.Field>
                     <form.Field name='nutrition.carbs'>
-                        {field => <InputNutritionalFact withLetter 
+                        {field => <InputNutritionalFact withLetter
                             field={{
                                 name: 'carbs',
                                 state: field.state,
