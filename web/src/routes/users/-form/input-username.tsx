@@ -1,9 +1,8 @@
-import type {User} from "#/entities/user.ts";
 import {useNavigate} from "@tanstack/react-router";
-import {pb} from "#/pb.ts";
 import {useState} from "react";
 import {Button, InputGroup} from "@heroui/react";
 import {Check, IdCard} from "lucide-react";
+import {auth, type User} from "#/api.ts";
 
 
 export default function InputUsername({ user } : {
@@ -16,9 +15,8 @@ export default function InputUsername({ user } : {
             return;
         }
 
-        await pb.collection('users').update(user.id, {
-            name
-        });
+        await auth.updateUser({ name });
+        await auth.getSession({ query: { disableCookieCache: true } });
         await navigate({ to: '.' });
     };
 

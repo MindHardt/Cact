@@ -1,15 +1,16 @@
-import {useRef, useState} from "react";
-import {Button, ButtonGroup, Surface} from "@heroui/react";
-import {ImagePlus, Trash} from "lucide-react";
+import { useRef, useState } from "react";
+import { Button, ButtonGroup, Surface } from "@heroui/react";
+import { ImagePlus, Trash } from "lucide-react";
+import { uploadUrl } from "#/api";
 
-export default function InputFoodImage({ field } : {
-
-    field: { state: { value: File | undefined }, handleChange: (value: File | undefined) => void }
+export default function InputFoodImage({ readonly, field }: {
+    readonly: boolean,
+    field: { state: { value: File | string | null }, handleChange: (value: File | string | null) => void }
 }) {
 
     const input = useRef<HTMLInputElement>(null);
-    const [preview, setPreview] = useState<string | null>(null);
-    const setFile = (file: File | undefined) => {
+    const [preview, setPreview] = useState<string | null>(typeof field.state.value === 'string' ? uploadUrl(field.state.value) : null);
+    const setFile = (file: File | null) => {
         preview && URL.revokeObjectURL(preview);
         setPreview(file ? URL.createObjectURL(file) : null);
         field.handleChange(file);
@@ -29,14 +30,16 @@ export default function InputFoodImage({ field } : {
                     <img className='max-w-full max-h-80' src={preview} alt='' loading='lazy' />
                 </div>
             )}
-            <ButtonGroup className='w-full'>
-                <Button className='w-full' onClick={() => input.current!.click()}>
-                    <ImagePlus />
-                </Button>
-                <Button onClick={() => setFile(undefined)}>
-                    <Trash />
-                </Button>
-            </ButtonGroup>
+            {readonly === false && (
+                <ButtonGroup className='w-full'>
+                    <Button className='w-full' onClick={() => input.current!.click()}>
+                        <ImagePlus />
+                    </Button>
+                    <Button onClick={() => setFile(null)}>
+                        <Trash />
+                    </Button>
+                </ButtonGroup>
+            )}
         </Surface>
     </>
 }

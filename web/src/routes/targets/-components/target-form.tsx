@@ -1,38 +1,39 @@
-import {type Target} from "#/entities/target.ts";
 import {useForm} from "@tanstack/react-form";
 import {z} from "zod";
-import {zNutritionFacts} from "#/entities/nutrition-facts.ts";
-import {useNavigate} from "@tanstack/react-router";
-import {pb} from "#/pb.ts";
+import {useNavigate, useRouter} from "@tanstack/react-router";
 import InputNutritionalFact from "#/components/input-nutritional-fact.tsx";
-import {Button, ButtonGroup, Spinner} from "@heroui/react";
+import {Button, ButtonGroup, Input, Spinner} from "@heroui/react";
 import {addMinutes, format} from "date-fns";
 import BackButton from "#/components/back-button.tsx";
 import {Calculator, Trash} from "lucide-react";
-import {RootRoute} from "#/routes/__root.tsx";
 import DaySelector from "#/components/day-selector.tsx";
+import type { Target } from "cact-shared/zTarget.js";
+import { api } from "#/api";
+import { calculateCalories, zNutritionalFact } from "cact-shared/zNutritionalFacts.js";
 
 const zValidator = z.object({
     id: z.string().optional(),
+    name: z.string().nullable(),
     activeFrom: z.date(),
-    ...zNutritionFacts.shape
+    calories: zNutritionalFact.nullable(),
+    protein: zNutritionalFact.nullable(),
+    fats: zNutritionalFact.nullable(),
+    carbs: zNutritionalFact.nullable()
 });
-function calculateCalories(facts: { protein: number, carbs: number, fats: number }) {
-    return (facts.protein * 4) + (facts.fats * 9) + (facts.carbs * 4);
-}
 
 export default function TargetForm({ target } : {
     target?: Target
 }) {
 
-    const { user } = RootRoute.useRouteContext();
-    const navigate = useNavigate();
+    const router = useRouter();
     const form = useForm({
         defaultValues: zValidator.optional().parse(target) ?? {
-            protein: 0,
-            fats: 0,
-            carbs: 0,
-            calories: 0,
+            id: undefined,
+            name: null,
+            protein: null,
+            fats: null,
+            carbs: null,
+            calories: null,
             activeFrom: new Date()
         },
         validators: {
@@ -41,16 +42,17 @@ export default function TargetForm({ target } : {
         },
         onSubmit: async ({ value: { id, ...body } }) => {
             if (id) {
-                await pb.collection('targets').update(id, { ...body, user: user!.id });
+                await api.targets[':id'].$patch({ param: { id }, json: body });
+                router.history.back();
             } else {
-                await pb.collection('targets').create({ ...body, user: user!.id });
+                await api.targets.$post({ json: body });
+                await router.navigate({ to: '/targets' });
             }
-            await navigate({ to: '/targets' });
         }
     })
     const onDelete = async () => {
-        await pb.collection('targets').delete(target!.id);
-        await navigate({ to: '/targets' });
+        await api.targets[':id'].$delete({ param: { id: target!.id }});
+        await router.history.back();
     }
 
     return (
@@ -62,6 +64,15 @@ export default function TargetForm({ target } : {
                 await form.handleSubmit();
             }}>
             <BackButton />
+            <form.Field name='name'>
+                {field => (
+                    <Input
+                        placeholder="Название цели"
+                        value={field.state.value ?? ''}
+                        onChange={e => field.handleChange(e.target.value.length > 0 ? e.target.value : null)}
+                    />
+                )}
+            </form.Field>
             <form.Field name='activeFrom'>
                 {field => (
                     <DaySelector

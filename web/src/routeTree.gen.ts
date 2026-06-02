@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TargetsIndexRouteImport } from './routes/targets/index'
 import { Route as MealsIndexRouteImport } from './routes/meals/index'
@@ -16,10 +17,16 @@ import { Route as FoodsIndexRouteImport } from './routes/foods/index'
 import { Route as UsersMeRouteImport } from './routes/users/me'
 import { Route as TargetsNewRouteImport } from './routes/targets/new'
 import { Route as TargetsIdRouteImport } from './routes/targets/$id'
-import { Route as MealsAddRouteImport } from './routes/meals/add'
+import { Route as MealsNewRouteImport } from './routes/meals/new'
 import { Route as MealsIdRouteImport } from './routes/meals/$id'
+import { Route as FoodsNewRouteImport } from './routes/foods/new'
 import { Route as FoodsIdRouteImport } from './routes/foods/$id'
 
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,14 +62,19 @@ const TargetsIdRoute = TargetsIdRouteImport.update({
   path: '/targets/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MealsAddRoute = MealsAddRouteImport.update({
-  id: '/meals/add',
-  path: '/meals/add',
+const MealsNewRoute = MealsNewRouteImport.update({
+  id: '/meals/new',
+  path: '/meals/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MealsIdRoute = MealsIdRouteImport.update({
   id: '/meals/$id',
   path: '/meals/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoodsNewRoute = FoodsNewRouteImport.update({
+  id: '/foods/new',
+  path: '/foods/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FoodsIdRoute = FoodsIdRouteImport.update({
@@ -73,9 +85,11 @@ const FoodsIdRoute = FoodsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/foods/$id': typeof FoodsIdRoute
+  '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -85,9 +99,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/foods/$id': typeof FoodsIdRoute
+  '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -98,9 +114,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/foods/$id': typeof FoodsIdRoute
+  '/foods/new': typeof FoodsNewRoute
   '/meals/$id': typeof MealsIdRoute
-  '/meals/add': typeof MealsAddRoute
+  '/meals/new': typeof MealsNewRoute
   '/targets/$id': typeof TargetsIdRoute
   '/targets/new': typeof TargetsNewRoute
   '/users/me': typeof UsersMeRoute
@@ -112,9 +130,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/foods/$id'
+    | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -124,9 +144,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/foods/$id'
+    | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -136,9 +158,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/foods/$id'
+    | '/foods/new'
     | '/meals/$id'
-    | '/meals/add'
+    | '/meals/new'
     | '/targets/$id'
     | '/targets/new'
     | '/users/me'
@@ -149,9 +173,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   FoodsIdRoute: typeof FoodsIdRoute
+  FoodsNewRoute: typeof FoodsNewRoute
   MealsIdRoute: typeof MealsIdRoute
-  MealsAddRoute: typeof MealsAddRoute
+  MealsNewRoute: typeof MealsNewRoute
   TargetsIdRoute: typeof TargetsIdRoute
   TargetsNewRoute: typeof TargetsNewRoute
   UsersMeRoute: typeof UsersMeRoute
@@ -162,6 +188,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -211,11 +244,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TargetsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/meals/add': {
-      id: '/meals/add'
-      path: '/meals/add'
-      fullPath: '/meals/add'
-      preLoaderRoute: typeof MealsAddRouteImport
+    '/meals/new': {
+      id: '/meals/new'
+      path: '/meals/new'
+      fullPath: '/meals/new'
+      preLoaderRoute: typeof MealsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/meals/$id': {
@@ -223,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/meals/$id'
       fullPath: '/meals/$id'
       preLoaderRoute: typeof MealsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/foods/new': {
+      id: '/foods/new'
+      path: '/foods/new'
+      fullPath: '/foods/new'
+      preLoaderRoute: typeof FoodsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/foods/$id': {
@@ -237,9 +277,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   FoodsIdRoute: FoodsIdRoute,
+  FoodsNewRoute: FoodsNewRoute,
   MealsIdRoute: MealsIdRoute,
-  MealsAddRoute: MealsAddRoute,
+  MealsNewRoute: MealsNewRoute,
   TargetsIdRoute: TargetsIdRoute,
   TargetsNewRoute: TargetsNewRoute,
   UsersMeRoute: UsersMeRoute,

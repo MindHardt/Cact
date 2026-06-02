@@ -8,12 +8,13 @@ const factLetters: Record<NutritionalFactName, string> = {
     carbs: 'У'
 }
 
-export default function InputNutritionalFact({ field, withLetter } : {
+export default function InputNutritionalFact({ readonly, field, withLetter } : {
+    readonly?: boolean,
     withLetter?: boolean,
     field: {
         name: NutritionalFactName,
-        state: { value: number },
-        handleChange: (value: number) => void
+        state: { value: number | null },
+        handleChange: (value: number | null) => void
     }
 }) {
 
@@ -23,12 +24,13 @@ export default function InputNutritionalFact({ field, withLetter } : {
             {withLetter && <span className='font-semibold text-lg'>{factLetters[field.name]}</span>}
         </InputGroup.Prefix>
         <InputGroup.Input
+            readOnly={readonly}
             name={field.name}
             type='number'
             min='0'
             step='0.1'
-            value={field.state.value}
-            onChange={e => field.handleChange(parseFloat(e.target.value) || 0)}
+            value={field.state.value ?? ''}
+            onChange={e => field.handleChange(parseFloat(e.target.value) || null)}
         />
     </InputGroup>
 

@@ -1,15 +1,23 @@
-FROM node:22-alpine AS build
+FROM node:24-slim AS build
 
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-ARG VITE_POCKETBASE_URL
-RUN pnpm run --filter cact-web --fail-if-no-match build
+WORKDIR /app
+
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
+
+COPY shared ./shared
+COPY web ./web
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm --fail-if-no-match --filter=cact-shared run build
+
+ARG VITE_API_URL
+RUN pnpm --fail-if-no-match --filter=cact-web run build
+
 
 FROM nginx:alpine
-COPY --from=build /usr/src/app/web/dist /usr/share/nginx/html
+COPY --from=build /app/web/dist /usr/share/nginx/html
 COPY ./web/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

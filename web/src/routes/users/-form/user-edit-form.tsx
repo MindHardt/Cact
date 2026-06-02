@@ -1,7 +1,7 @@
-import type {User} from "#/entities/user.ts";
 import {Card} from "@heroui/react";
 import InputUsername from "#/routes/users/-form/input-username.tsx";
 import InputAvatar from "#/routes/users/-form/input-avatar.tsx";
+import type {User} from "#/api.ts";
 
 export default function UserEditForm({ user } : {
     user: User

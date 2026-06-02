@@ -6,36 +6,27 @@ import '../styles.css';
 import '../theme.css';
 import "@fontsource/open-sans/500.css";
 import {Surface} from "@heroui/react";
-import {pb} from "#/pb.ts";
-import {zUser} from "#/entities/user.ts";
 import AuthHeader from "#/routes/-auth-header.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {useRef} from "react";
 import Footer from "#/routes/-footer.tsx";
 import NotFoundComponent from "#/routes/-not-found-component.tsx";
 import ErrorComponent from "#/routes/-error-component.tsx";
+import {auth} from "#/api.ts";
 
 export const Route = createRootRoute({
     component: RootComponent,
     beforeLoad: async () => {
-        if (pb.authStore.token && !pb.authStore.isValid) {
-            await pb.collection('users').authRefresh().catch(e => {
-                if ('status' in e || e.status === 401) {
-                    pb.authStore.clear();
-                } else {
-                    throw e;
-                }
-            });
-        }
-        return {
-            user: zUser.nullish().parse(pb.authStore.record),
+        const { data } = await auth.getSession();
+        return data ?? {
+            user: null,
+            session: null
         }
     },
+    staleTime: 1000 * 60,
+    preloadStaleTime: 1000 * 60,
     notFoundComponent: NotFoundComponent,
-    errorComponent: ErrorComponent,
-    loader: async () => ({
-        providers: await pb.collection('users').listAuthMethods().then(x => x.oauth2.providers)
-    })
+    errorComponent: ErrorComponent
 });
 
 export const RootRoute = Route;
@@ -46,7 +37,7 @@ function RootComponent() {
 
     return (
         <QueryClientProvider client={qc.current}>
-            <Surface variant='secondary' className='h-dvh flex flex-col'>
+            <Surface variant='secondary' className='min-h-dvh flex flex-col'>
                 <AuthHeader />
                 <main className='w-full max-w-4xl mx-auto p-5 grow'>
                     <Outlet />

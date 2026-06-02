@@ -1,10 +1,10 @@
 import {RootRoute} from "#/routes/__root.tsx";
 import {Avatar, Button, Dropdown, Header, Label, Separator} from "@heroui/react";
-import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
-import {pb} from "#/pb.ts";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {Lock} from "lucide-react";
+import {DoorClosed, Lock, NotebookPen, Target, UserPen} from "lucide-react";
 import Logo from "#/components/logo.tsx";
+import {auth, type User} from "#/api.ts";
+import { avatarFallback, avatarSrc } from "#/routes/users/-avatar-fns";
 
 
 export default function AuthHeader() {
@@ -27,14 +27,14 @@ function UserControls({ user } : { user: User }) {
 
     const navigate = useNavigate();
     const logout = async () => {
-        pb.authStore.clear();
+        await auth.signOut();
         await navigate({ to: '.' });
     }
 
     return <Dropdown>
         <Dropdown.Trigger className='flex flex-row gap-1 items-center justify-center'>
             <Avatar>
-                <Avatar.Image alt={user.name} src={avatarSrc(user, { thumb: '40x40f' })} />
+                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
         </Dropdown.Trigger>
@@ -47,11 +47,34 @@ function UserControls({ user } : { user: User }) {
                 <Dropdown.Section>
                     <Dropdown.Item>
                         <Link to='/users/me'>
-                            <Label>Профиль</Label>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <UserPen />
+                                Профиль
+                            </Label>
                         </Link>
                     </Dropdown.Item>
+                    <Dropdown.Item>
+                        <Link to='/targets'>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <Target />
+                                Цели
+                            </Label>
+                        </Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                        <Link to='/meals'>
+                            <Label className='flex flex-row gap-1 items-center'>
+                                <NotebookPen />
+                                Дневник
+                            </Label>
+                        </Link>
+                    </Dropdown.Item>
+                    <Separator className='my-2' />
                     <Dropdown.Item id='logout' textValue="Выйти" variant="danger">
-                        <Label>Выйти</Label>
+                        <Label className='flex flex-row gap-1 items-center justify-between w-full'>
+                            <span className='me-auto'>Выйти</span>
+                            <DoorClosed />
+                        </Label>
                     </Dropdown.Item>
                 </Dropdown.Section>
             </Dropdown.Menu>
@@ -62,10 +85,16 @@ function UserControls({ user } : { user: User }) {
 function LoginControls() {
 
     const navigate = useNavigate();
-    const { providers } = RootRoute.useLoaderData();
-    const login = async (key: number | string) => pb
-        .collection('users')
-        .authWithOAuth2({ provider: typeof key === 'number' ? providers[key].name : key })
+    const providers = [{
+        name: 'github', displayName: 'GitHub'
+    }];
+    const login = async (key: number | string) => auth
+        .signIn.social({
+            provider: typeof key === 'number' ? providers[key].name : key,
+            callbackURL: window.location.href,
+            errorCallbackURL: window.location.href,
+            newUserCallbackURL: window.location.href
+        })
         .then(() => navigate({ to: '.' }))
 
     if (providers.length == 1) {

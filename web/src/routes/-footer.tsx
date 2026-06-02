@@ -10,7 +10,7 @@ export default function Footer() {
                 <BugReport />
             </div>
             <div className='flex flex-row gap-2 items-center'>
-                <AlphaBuild />
+                <BetaBuild />
                 <Developer />
             </div>
         </Surface>
@@ -36,17 +36,17 @@ function Github() {
     )
 }
 
-function AlphaBuild() {
+function BetaBuild() {
     return (
         <Popover>
             <Button variant="tertiary">
-                <span className='text-sm text-accent animate-pulse'>αlpha</span>
+                <span className='text-sm text-accent animate-pulse'>βeta</span>
             </Button>
             <Popover.Content placement="top">
                 <Popover.Dialog>
                     <Popover.Arrow />
                     <p className="text-sm">
-                        Это альфа-версия приложения, обо всех багах и пожеланиях пишите разработчику
+                        Это бета-версия приложения, обо всех багах и пожеланиях пишите разработчику
                     </p>
                 </Popover.Dialog>
             </Popover.Content>

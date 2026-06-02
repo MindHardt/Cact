@@ -1,39 +1,34 @@
-import {createFileRoute, useRouter} from '@tanstack/react-router'
-import {catchNotFound, pb} from "#/pb.ts";
-import {zFood} from "#/entities/food.ts";
-import {Button, Card, Surface} from "@heroui/react";
+import { createFileRoute } from '@tanstack/react-router'
+import { Card } from "@heroui/react";
+import { api, interceptNotFound } from '#/api';
+import { zFood } from 'cact-shared/zFood.js';
+import FoodForm from './-form/food-form';
+import { RootRoute } from '../__root';
+import BackButton from '#/components/back-button';
 
 export const Route = createFileRoute('/foods/$id')({
   component: RouteComponent,
-  loader: async ({ params: { id }}) => ({
-    food: await pb.collection('foods')
-        .getOne(id)
-        .then(x => zFood.parse(x))
-        .catch(catchNotFound)
+  loader: async ({ params: { id } }) => ({
+    food: await api.foods[':id'].$get({ param: { id } })
+      .then(interceptNotFound)
+      .then(x => x.json())
+      .then(x => zFood.parse(x))
   })
 })
 
 function RouteComponent() {
 
   const { food } = Route.useLoaderData();
-  const router = useRouter();
+  const { user } = RootRoute.useRouteContext();
 
-  return <Card className='text-center'>
-    <Button className='mx-auto' onClick={() => router.history.back()}>
-      Назад
-    </Button>
-    {food.image && (
-        <div className='rounded-2xl overflow-hidden max-w-full flex justify-center items-center mx-auto'>
-          <img className='max-w-full max-h-180' src={pb.files.getURL(food, food.image)} alt='' loading='lazy' />
-        </div>
-    )}
-    <Card.Header>
-      <Card.Title className='text-2xl'>{food.name}</Card.Title>
-    </Card.Header>
-    {food.description && (
-        <Surface variant='tertiary' className='rounded-2xl p-5'>
-          <p>{food.description}</p>
-        </Surface>
-    )}
-  </Card>
+  return (
+    <div className='flex flex-col gap-2'>
+      <BackButton navigate={{ to: '/foods' }} />
+      <Card className='text-center'>
+        <Card.Content>
+          <FoodForm food={food} readonly={user?.id !== food.authorId} />
+        </Card.Content>
+      </Card>
+    </div>
+  )
 }

@@ -1,9 +1,10 @@
-import {avatarFallback, avatarSrc, type User} from "#/entities/user.ts";
 import {Avatar, Button, ButtonGroup} from "@heroui/react";
-import {pb} from "#/pb.ts";
 import {Trash, Upload} from "lucide-react";
 import {useNavigate} from "@tanstack/react-router";
 import {useRef} from "react";
+import {api, auth, uploadUrl, type User} from "#/api.ts";
+import {avatarFallback, avatarSrc} from "../-avatar-fns";
+import { zUpload } from "cact-shared/zUpload.js";
 
 export default function InputAvatar({ user }: {
     user: User
@@ -12,9 +13,13 @@ export default function InputAvatar({ user }: {
     const input = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const setAvatar = async (avatar: File | null) => {
-        await pb.collection('users').update(user.id, {
-            avatar
-        });
+        const image = avatar
+            ? await api.uploads.$post({ form: { scope: 'USER_AVATAR', file: avatar }})
+                .then(x => x.json())
+                .then(x => uploadUrl(zUpload.parse(x).id))
+            : null;
+        await auth.updateUser({ image });
+        await auth.getSession({ query: { disableCookieCache: true } });
         await navigate({ to: '.' });
     }
 
@@ -28,7 +33,7 @@ export default function InputAvatar({ user }: {
                 onChange={e => setAvatar(e.target.files![0])}
             />
             <Avatar>
-                <Avatar.Image alt={user.name} src={avatarSrc(user, { thumb: '40x40f' })} />
+                <Avatar.Image alt={user.name} src={avatarSrc(user)} />
                 <Avatar.Fallback>{avatarFallback(user)}</Avatar.Fallback>
             </Avatar>
             <ButtonGroup className='w-full'>
@@ -36,7 +41,7 @@ export default function InputAvatar({ user }: {
                     <Upload />
                     Загрузить аватар
                 </Button>
-                {user.avatar && (
+                {user.image && (
                     <Button variant='danger' onClick={() => setAvatar(null)}>
                         <Trash />
                     </Button>

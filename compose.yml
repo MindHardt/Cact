@@ -1,23 +1,46 @@
 services:
-
-  pocketbase:
-    build:
-      context: .
-      dockerfile: ./pocketbase/Dockerfile
-    ports: [ "8080:8080" ]
-    env_file: [ "./pocketbase/.env.local" ]
-    volumes:
-      - "./pocketbase/pb_data:/pb/pb_data"
-      - "./pocketbase/pb_hooks:/pb/pb_hooks"
-      - "./pocketbase/pb_migrations:/pb/pb_migrations"
-      - "./pocketbase/instructions.md:/pb/instuctions.md"
-    # admin@example.com
-    # nqC-mNR-6XC-H3e
-
   web:
     build:
       context: .
       dockerfile: ./web/Dockerfile
       args:
-        VITE_POCKETBASE_URL: http://localhost:8080
+        VITE_API_URL: http://localhost:3001
     ports: [ "3000:80" ]
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    env_file:
+      - path: ./api/.env
+      - path: api/.env.local
+        required: false
+    ports: [ "3001:3001" ]
+    environment:
+      NODE_ENV: staging
+      DATABASE_URL: postgres://cact_api:cact_api@postgres:5432/cact_api
+      S3_ENDPOINT: http://s3:9001
+
+  postgres:
+    restart: unless-stopped
+    image: postgres:18
+    ports: [ "5432:5432" ]
+    environment: [ "POSTGRES_PASSWORD=postgres" ]
+    volumes:
+      - "./.docker-volumes/postgres:/var/lib/postgresql"
+      - "./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  s3:
+    restart: unless-stopped
+    image: rustfs/rustfs:latest
+    ports: [ "9000:9000", "9001:9001" ]
+    volumes: [ "./.docker-volumes/rustfs:/data" ]
+    environment:
+      RUSTFS_ACCESS_KEY: cact_api
+      RUSTFS_SECRET_KEY: cact_api
