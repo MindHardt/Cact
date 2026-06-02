@@ -4,7 +4,7 @@ import type {HonoType} from "../../index.js";
 import {zPaginatedRequest, zPaginatedResponse} from "cact-shared/pagination.js";
 import {db} from "../../data/db.js";
 import {meals} from "./meal-schema.js";
-import {and, eq, lte, gte, count, ilike} from "drizzle-orm";
+import {and, eq, lte, gte, count, ilike, sql} from "drizzle-orm";
 import { zMeal } from "cact-shared/zMeal.js";
 
 
@@ -26,7 +26,7 @@ export async function getMealsHandler({ query, c } : {
         eq(meals.userId, userId),
         from ? gte(meals.mealTime, from) : undefined,
         to ? lte(meals.mealTime, to) : undefined,
-        search ? ilike(meals.note, `%${search}%`) : undefined
+        search ? ilike(sql`COALESCE(meals.name, '') || ' ' || COALESCE(meals.note, '')`, `%${search}%`) : undefined
     );
 
     const [{ total }] = await db

@@ -6,6 +6,7 @@ import type { NutritionalFacts } from "cact-shared/zNutritionalFacts.js";
 
 export const meals = pgTable('meals', {
     id: uuid('id').primaryKey().$default(() => uuidv7()),
+    name: text('name'),
     note: text('note'),
     mealTime: timestamp('meal_time').notNull(),
     portions: jsonb('portions').notNull().$type<FoodPortion[]>(),

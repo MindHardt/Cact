@@ -14,6 +14,7 @@ export const zPatchMealParams = zMeal.pick({
 export const zPatchMealJson = zMeal.pick({
     mealTime: true,
     note: true,
+    name: true,
     portions: true,
     nutrition: true
 }).partial();

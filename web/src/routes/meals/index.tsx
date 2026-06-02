@@ -94,8 +94,11 @@ function RouteComponent() {
             {meals.data.length > 0 ? meals.data.map(meal => (
                 <Link key={meal.id} to='/meals/$id' params={{ id: meal.id }}>
                     <Card>
+                        <Card.Header>
+                            {meal.name && <h2 className='text-lg font-semibold'>{meal.name}</h2>}
+                            <span className='text-muted'>{formatRelative(meal.mealTime, Date.now(), { locale: ru })}</span>
+                        </Card.Header>
                         <Card.Content className='flex flex-row flex-wrap gap-2 items-center'>
-                            {meal.note && <h2 className='text-lg font-semibold'>{meal.note}</h2>}
                             {meal.nutrition.calories !== 0 && <Chip><NutritionalFactIcon fact='calories' /> {meal.nutrition.calories}</Chip>}
                             {meal.nutrition.protein !== 0 && <Chip><NutritionalFactIcon fact='protein' /> {meal.nutrition.protein}</Chip>}
                             {meal.nutrition.fats !== 0 && <Chip><NutritionalFactIcon fact='fats' /> {meal.nutrition.fats}</Chip>}

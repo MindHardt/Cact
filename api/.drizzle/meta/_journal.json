@@ -50,6 +50,13 @@
       "when": 1780155187363,
       "tag": "0006_added-targets",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1780400992636,
+      "tag": "0007_added-meal-names",
+      "breakpoints": true
     }
   ]
 }

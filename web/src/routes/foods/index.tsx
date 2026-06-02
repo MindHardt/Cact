@@ -52,7 +52,7 @@ function RouteComponent() {
                 onChange={e => setQ.maybeExecute(e.target.value)}
             />
             <InputGroup.Suffix className='gap-2'>
-                <span className='text-border-secondary'>{foods.total}</span>
+                <span className='text-muted'>{foods.total}</span>
                 <Button size='sm' variant='secondary' onClick={() => setQ.flush()}>
                     {routerState.isLoading ? <LoaderCircle className='size-4 animate-spin' /> : <Search className='size-4' />}
                 </Button>

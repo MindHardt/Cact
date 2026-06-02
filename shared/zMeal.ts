@@ -15,6 +15,7 @@ export const zMealId = z.uuid().brand<'MealId'>();
 export const zMeal = z.object({
     id: zMealId,
     mealTime: zDatetime,
+    name: z.string().nullable(),
     note: z.string().nullable(),
     portions: z.array(zFoodPortion),
     nutrition: zNutritionalFacts.extend({

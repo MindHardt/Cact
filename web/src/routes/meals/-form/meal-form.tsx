@@ -5,6 +5,7 @@ import {
     ButtonGroup,
     Card,
     CardContent,
+    Input,
     InputGroup,
     Modal,
     Spinner,
@@ -24,6 +25,7 @@ import { getTotal } from "cact-shared/zAiPrompt.js";
 const zValidator = zMeal.pick({
     nutrition: true,
     note: true,
+    name: true,
     portions: true,
     mealTime: true
 });
@@ -74,6 +76,17 @@ export default function MealForm({ meal }: {
         await form.handleSubmit();
     }}>
         <Card>
+            <Card.Header>
+                <form.Field name='name'>
+                    {field => (
+                        <Input
+                            placeholder='Название'
+                            value={field.state.value ?? ''}
+                            onChange={e => field.handleChange(e.target.value.length > 0 ? e.target.value : null)}
+                        />
+                    )}
+                </form.Field>
+            </Card.Header>
             <CardContent>
                 <form.Field name='note'>
                     {field => (
