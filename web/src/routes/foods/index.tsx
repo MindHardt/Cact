@@ -93,17 +93,17 @@ function RouteComponent() {
                     </Pagination.Previous>
                 </Pagination.Item>
                 <Pagination.Summary>
-                    {page} / {totalPages}
+                    {page} / {Math.max(totalPages, 1)}
                 </Pagination.Summary>
                 <Pagination.Item>
-                    <Pagination.Next isDisabled={page === totalPages}>
+                    <Pagination.Next isDisabled={page >= totalPages}>
                         <Link to='/foods' search={prev => ({ ...prev, page: page + 1 })}>
                             <ChevronRight />
                         </Link>
                     </Pagination.Next>
                 </Pagination.Item>
                 <Pagination.Item>
-                    <Pagination.Next isDisabled={page === totalPages}>
+                    <Pagination.Next isDisabled={page >= totalPages}>
                         <Link to='/foods' search={prev => ({ ...prev, page: totalPages })}>
                             <ChevronsRight />
                         </Link>
