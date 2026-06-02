@@ -32,6 +32,7 @@ const zValidator = zMeal.pick({
 
 const emptyForm: z.infer<typeof zValidator> = {
     note: null,
+    name: null,
     nutrition: {
         protein: 0,
         fats: 0,

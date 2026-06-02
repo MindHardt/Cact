@@ -25,13 +25,13 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Build and push pocketbase
+      - name: Build and push api
         uses: docker/build-push-action@v6
         with:
           push: true
           context: .
-          file: ./pocketbase/Dockerfile
-          tags: ${{ secrets.REGISTRY }}/cact/pocketbase:latest
+          file: ./api/Dockerfile
+          tags: ${{ secrets.REGISTRY }}/cact/api:latest
 
       - name: Build and push web
         uses: docker/build-push-action@v6
@@ -41,11 +41,12 @@ jobs:
           file: ./web/Dockerfile
           build-args: |
             NODE_ENV=production
-            VITE_POCKETBASE_URL=https://cactpb.un1ver5e.ru
+            VITE_API_URL=https://cactapi.un1ver5e.ru
           tags: ${{ secrets.REGISTRY }}/cact/web:latest
 
       - name: Calling portainer webhooks
+        if: contains(github.event.head_commit.message, 'release')
         run: |
           sleep 10s
-          curl -fail -X POST ${{ secrets.POCKETBASE_WEBHOOK_URL }}
+          curl -fail -X POST ${{ secrets.API_WEBHOOK_URL }}
           curl -fail -X POST ${{ secrets.WEB_WEBHOOK_URL }}
