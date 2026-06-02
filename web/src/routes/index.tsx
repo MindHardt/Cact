@@ -33,10 +33,12 @@ function App() {
                     Мой дневник
                 </Button>
             </Link>
-            <Button size='lg' className='w-full' isDisabled>
+            <Link to='/about'>
+                <Button size='lg' className='w-full'>
                 <Info />
                 О проекте
             </Button>
+            </Link>
         </div>
     </article>
   )
