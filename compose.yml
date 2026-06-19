@@ -1,5 +1,6 @@
 services:
   web:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./web/Dockerfile
@@ -8,6 +9,7 @@ services:
     ports: [ "3000:80" ]
 
   api:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./api/Dockerfile
@@ -20,6 +22,7 @@ services:
       NODE_ENV: staging
       DATABASE_URL: postgres://cact_api:cact_api@postgres:5432/cact_api
       S3_ENDPOINT: http://s3:9001
+      S3_ENDPOINT_PUBLIC: http://localhost:9001
 
   postgres:
     restart: unless-stopped
