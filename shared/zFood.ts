@@ -13,7 +13,7 @@ export type FoodUnit = z.infer<typeof zUnit>;
 export const zFoodId = z.uuid().brand<'FoodId'>();
 export const zFood = z.object({
     id: zFoodId,
-    name: z.string(),
+    name: z.string().nonempty(),
     description: z.string().nullable(),
     facts: zNutritionalFacts,
     authorId: zUserId.nullable(),

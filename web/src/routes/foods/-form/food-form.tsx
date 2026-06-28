@@ -7,7 +7,8 @@ import { api } from "#/api.ts";
 import { zFood, type Food } from "cact-shared/zFood.js";
 import { zUpload } from "cact-shared/zUpload.js";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
+import InputUnit from "./input-unit.tsx";
 
 const zValidator = zFood.pick({
     name: true,
@@ -60,9 +61,9 @@ export default function FoodForm({ food, readonly }: {
                 : value.image
 
             const json = { ...value, imageId };
-            const { id } = await (food 
+            const { id } = await (food
                 ? api.foods[':id'].$patch({ param: { id: food.id }, json })
-                : api.foods.$post({ json }) 
+                : api.foods.$post({ json })
             ).then(x => x.json()).then(x => zFood.parse(x))
             form.reset();
             await navigate({ to: '/foods/$id', params: { id } })
@@ -137,6 +138,29 @@ export default function FoodForm({ food, readonly }: {
                 <form.Field name='image'>
                     {field => (
                         <InputFoodImage readonly={readonly} field={field} />
+                    )}
+                </form.Field>
+                <form.Field name='units'>
+                    {field => (
+                        <Surface className='flex flex-col gap-2'>
+                            <h2 className="font-semibold text-lg">Порции</h2>
+                            <InputUnit readOnly unit={field.state.value[0]} setUnit={() => { }} onDelete={() => { }} />
+                            {field.state.value.slice(1).map((x, i) => (
+                                <InputUnit key={i} readOnly={readonly} unit={x}
+                                    setUnit={x => field.handleChange(prev => {
+                                        const result = [...prev];
+                                        result[i + 1] = x;
+                                        return result;
+                                    })}
+                                    onDelete={() => field.handleChange(prev => [...prev.slice(0, i + 1), ...prev.slice(i + 2)])}
+                                />
+                            ))}
+                            {!readonly && (
+                                <Button onClick={() => field.handleChange(prev => ([...prev, { name: '', multiplier: 1 }]))}>
+                                    <Plus />
+                                </Button>
+                            )}
+                        </Surface>
                     )}
                 </form.Field>
             </div>
